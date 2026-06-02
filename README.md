@@ -50,7 +50,7 @@ OpenVPN server configured directly in pfSense for secure remote access using **c
 
 ## 👥 OpenVPN Active Client Connections
 
-![OpenVPN Clients](images/OpenvpnClients.png)
+![OpenVPN Clients](images/OpenvpnClients1.png)
 
 Three devices connected locally over the LAN tunnel and one cellular device connecting remotely from outside the network over WAN. Shows real IP addresses, virtual tunnel IPs in the 10.0.23.x range, bytes transferred per session, and the cipher in use.
 
