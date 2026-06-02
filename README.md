@@ -143,7 +143,7 @@ TrueNAS Scale running on dedicated bare-metal hardware:
 - **CPU:** Intel Core i7-6700
 - **RAM:** 62.7 GB
 - **Storage:** 18TB across two drives
-- **Role:** NAS, containerized app host, and Type 1 KVM hypervisor
+- **Role:** NAS and Type 1 KVM virtualization hypervisor with Plex Media Server, Pi‑hole, and Nextcloud.
 
 ---
 
