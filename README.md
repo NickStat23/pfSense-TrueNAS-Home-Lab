@@ -1,6 +1,6 @@
 # 🔒 pfSense + TrueNAS Home Lab
 
-A fully production-deployed, segmented home network built on dedicated hardware running **Netgate pfSense Plus** and a self-hosted **TrueNAS Scale** NAS server. This is not a VM lab — every component runs on bare metal in a live home environment across 20+ devices.
+A fully production-deployed, segmented home network built on dedicated hardware running **Netgate pfSense Plus** and a self-hosted **TrueNAS Scale** NAS server. This is not a VM lab; every component runs on bare metal in a live home environment across 20+ devices.
 
 ---
 
@@ -9,13 +9,13 @@ A fully production-deployed, segmented home network built on dedicated hardware 
 | Category | Technology |
 |---|---|
 | Firewall / Router | Netgate pfSense Plus 26.03 (FreeBSD 16.0) |
-| Hardware | Dell Inc. — Intel Core i5-7500 @ 3.40GHz, AES-NI enabled |
+| Hardware | Dell Inc.; Intel Core i5-7500 @ 3.40GHz, AES-NI enabled |
 | VPN | OpenVPN (certificate-based) + NordVPN client |
 | IDS/IPS | Suricata with live threat rulesets |
 | DNS Filtering | Pi-hole (network-wide, 50%+ block rate) |
 | Wireless Auth | FreeRADIUS / 802.1X |
 | SSL/TLS | ACME auto-renewing certificates |
-| NAS | TrueNAS Scale — Intel Core i7-6700, 62.7GB RAM, 18TB |
+| NAS | TrueNAS Scale; Intel Core i7-6700, 62.7GB RAM, 18TB |
 | Private Cloud | Nextcloud (locked behind OpenVPN tunnel) |
 | Media Server | Plex Media Server |
 | DNS Blocker | pfBlockerNG DNSBL |
@@ -30,11 +30,11 @@ A fully production-deployed, segmented home network built on dedicated hardware 
 pfSense Plus dashboard showing all active interfaces, live OpenVPN tunnel sessions, and running services. The network has been live for **20+ days of continuous uptime** with all core services healthy and operational.
 
 **Active Interfaces:**
-- `WAN` — 1000baseT full-duplex (internet uplink)
-- `LAN` — 192.168.21.1/24 (main trusted devices)
-- `LOREX` — 192.168.8.1/24 (IP camera system — isolated)
-- `ASUS` — 192.168.50.1/24 (Wi-Fi network — isolated)
-- `OPENVPN_NEW` — 10.0.23.1 (VPN tunnel network)
+- `WAN`; 1000baseT full-duplex (internet uplink)
+- `LAN`; 192.168.21.1/24 (main trusted devices)
+- `LOREX`; 192.168.8.1/24 (IP camera system; isolated)
+- `ASUS`; 192.168.50.1/24 (Wi-Fi network; isolated)
+- `OPENVPN_NEW`; 10.0.23.1 (VPN tunnel network)
 
 **All services running:** dhcpd, OpenVPN server, OpenVPN client (NordVPN), Suricata IDS/IPS, FreeRADIUS, pfBlockerNG, NTP, IGMP proxy, DNS Resolver, syslog
 
@@ -64,11 +64,11 @@ ACME certificate manager in pfSense handling automatic issuance and renewal of v
 
 ---
 
-## 🛡️ Suricata IDS/IPS — Interface Configuration
+## 🛡️ Suricata IDS/IPS; Interface Configuration
 
 ![Suricata Interfaces](images/Suricata_Interfaces.png)
 
-Suricata IDS/IPS deployed across **all network interfaces** — WAN, LAN, ASUS, and LOREX segments run independent inspection engines. Each interface monitors traffic in real-time with automated threat blocking enabled, meaning malicious traffic is not just detected but actively dropped.
+Suricata IDS/IPS deployed across **all network interfaces**; WAN, LAN, ASUS, and LOREX segments run independent inspection engines. Each interface monitors traffic in real-time with automated threat blocking enabled, meaning malicious traffic is not just detected but actively dropped.
 
 ---
 
@@ -108,7 +108,7 @@ LAN rules are organized into labeled sections for clarity. The same ruleset is m
 
 | Section | Protocol | Port | Description |
 |---|---|---|---|
-| Anti-Lockout | IPv4 TCP | 10443 | Admin access protection — prevents lockout from LAN |
+| Anti-Lockout | IPv4 TCP | 10443 | Admin access protection; prevents lockout from LAN |
 | NAT | IPv4 UDP | 53 (DNS) | Force all DNS through Pi-Hole at 192.168.21.12 |
 | SSH | IPv4 TCP | 22222 | SSH access to pfSense local management only |
 | DNS | IPv4 UDP/TCP | 53 / 853 (DoT) | Pi-Hole DNS outgoing + DNS-over-TLS via Pi-Hole |
@@ -122,7 +122,7 @@ LAN rules are organized into labeled sections for clarity. The same ruleset is m
 | Plex | IPv4 TCP | 32400 | TrueNAS Plex server at 192.168.21.12 |
 | TrueNAS | IPv4 TCP/UDP | * | TrueNAS all outgoing (192.168.21.12) |
 | IGMP/ICMP | IPv4 IGMP/ICMP | * | Multicast and diagnostic traffic via IGMPNetworks alias |
-| ❌ Block | IPv4 | * | Block WAN subnets from entering LAN — hard isolation |
+| ❌ Block | IPv4 | * | Block WAN subnets from entering LAN; hard isolation |
 
 > **Note:** LOREX (IP camera system, 192.168.8.x) and ASUS Wi-Fi (192.168.50.x) run identical firewall rulesets, ensuring IoT devices and wireless clients are held to the same strict traffic policy as the main LAN with no inter-VLAN communication unless explicitly permitted.
 
@@ -147,9 +147,9 @@ TrueNAS Scale running on dedicated bare-metal hardware:
 
 Containerized applications running on TrueNAS Scale:
 
-- **Nextcloud** — private self-hosted cloud storage
-- **Pi-hole** — network-wide DNS ad/tracker blocking
-- **Plex** — local and remote media streaming
+- **Nextcloud**; private self-hosted cloud storage
+- **Pi-hole**; network-wide DNS ad/tracker blocking
+- **Plex**; local and remote media streaming
 
 ---
 
@@ -157,7 +157,7 @@ Containerized applications running on TrueNAS Scale:
 
 ![Nextcloud](images/TrueNAS_Nextcloud.png)
 
-Nextcloud deployed on TrueNAS as a fully private alternative to Google Drive or iCloud. Access is locked behind the **OpenVPN tunnel** with role-based permissions — files are never stored on third-party infrastructure.
+Nextcloud deployed on TrueNAS as a fully private alternative to Google Drive or iCloud. Access is locked behind the **OpenVPN tunnel** with role-based permissions; files are never stored on third-party infrastructure.
 
 ---
 
@@ -168,9 +168,9 @@ Nextcloud deployed on TrueNAS as a fully private alternative to Google Drive or 
 Pi-hole running on TrueNAS handling **network-wide DNS filtering** across all connected devices:
 
 - **69,917** total DNS queries processed
-- **34,996 blocked (50.1%)** — ads, trackers, and malicious domains
+- **34,996 blocked (50.1%)**; ads, trackers, and malicious domains
 - **2,146,983 domains** on the blocklist
-- Forced via pfSense NAT rule — no device can bypass it
+- Forced via pfSense NAT rule; no device can bypass it
 
 ---
 
@@ -184,7 +184,7 @@ Plex Media Server running on TrueNAS serving a local media library across the ho
 
 ## 🖥️ Type 1 Hypervisor & VM Deployment
 
-![TrueNAS Ubuntu VM](images/TrueNAS_Ubuntu.png.png)
+![TrueNAS Ubuntu VM](images/TrueNAS_Ubuntu.png)
 
 TrueNAS Scale functions as a **KVM-based Type 1 bare-metal hypervisor**. Provisioned an Ubuntu Desktop 22.04 VM with dedicated compute and storage resources for running self-hosted security tooling and lab environments directly on the NAS hardware.
 
@@ -192,6 +192,6 @@ TrueNAS Scale functions as a **KVM-based Type 1 bare-metal hypervisor**. Provisi
 
 ## 🙋 Author
 
-**Nick Efstathiou**  
+**Nicholas Efstathiou**  
 Cybersecurity | Network Engineering | Home Lab  
 [LinkedIn](https://www.linkedin.com/in/NickStat23)
