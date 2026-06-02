@@ -118,7 +118,6 @@ LAN rules are organized into labeled sections for clarity. The same ruleset is m
 | NAT | IPv4 UDP | 53 (DNS) | Force all DNS through Pi-Hole at 192.168.21.12 |
 | SSH | IPv4 TCP | 22222 | SSH access to pfSense local management only |
 | DNS | IPv4 UDP/TCP | 53 / 853 (DoT) | Pi-Hole DNS outgoing + DNS-over-TLS via Pi-Hole |
-| DNS | IPv4 UDP/TCP | 53 / 853 | Allow fallback to external DNS (Google, Cloudflare) |
 | HTTP/HTTPS | IPv4 TCP | 80 / 443 | Standard web traffic from LAN subnets |
 | HTTPS | IPv4 TCP | 10443 | pfSense & Asus Router secure config port for 192.168.21.1 & 192.168.50.10 |
 | NTP | IPv4 UDP | 123 | Time sync to LAN address + LAN subnets |
