@@ -34,7 +34,7 @@ pfSense Plus dashboard showing all active interfaces, live OpenVPN tunnel sessio
 - `LAN`; 192.168.21.1/24 (main trusted devices)
 - `LOREX`; 192.168.8.1/24 (IP camera system; isolated)
 - `ASUS`; 192.168.50.1/24 (Wi-Fi network; isolated)
-- `OPENVPN_NEW`; 10.0.23.1 (VPN tunnel network)
+- `OPENVPN_NEW`; 10.0.23.1/24 (VPN tunnel network)
 
 **All services running:** dhcpd, OpenVPN server, OpenVPN client (NordVPN), Suricata IDS/IPS, FreeRADIUS, pfBlockerNG, NTP, IGMP proxy, DNS Resolver, syslog
 
