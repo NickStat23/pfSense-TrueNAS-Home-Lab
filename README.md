@@ -1,6 +1,6 @@
 # 🔒 pfSense + TrueNAS Home Lab
 
-A fully production-deployed, segmented home network built on dedicated hardware running **Netgate pfSense Plus** and a self-hosted **TrueNAS Scale** NAS server. This is not a VM lab; every component runs on bare metal in a live home environment across 20+ devices.
+A fully production-deployed, segmented home network built on dedicated hardware running **Netgate pfSense Plus** and a self-hosted **TrueNAS Scale** NAS server. Core services run on bare metal, with additional virtualized workloads hosted through the TrueNAS Scale KVM hypervisor. The environment supports 20+ active devices across multiple isolated network segments.
 
 ---
 
@@ -9,7 +9,9 @@ A fully production-deployed, segmented home network built on dedicated hardware 
 | Category | Technology |
 |---|---|
 | Firewall / Router | Netgate pfSense Plus 26.03 (FreeBSD 16.0) |
-| Hardware | Dell Inc.; Intel Core i5-7500 @ 3.40GHz, AES-NI enabled |
+| Firewall Hardware | Dell Inc.; Intel Core i5-7500 @ 3.40GHz, AES-NI enabled |
+| Network Interface Card | Intel I350-T4 1GbE Quad-Port NIC |
+| Switching | 24-Port Gigabit Managed Switch |
 | VPN | OpenVPN (certificate-based) + NordVPN client |
 | IDS/IPS | Suricata with live threat rulesets |
 | DNS Filtering | Pi-hole (network-wide, 50%+ block rate) |
@@ -22,6 +24,10 @@ A fully production-deployed, segmented home network built on dedicated hardware 
 | Hypervisor | KVM (Type 1, bare-metal on TrueNAS Scale) |
 
 ---
+
+## 🔌 Physical Network Infrastructure
+
+The pfSense firewall runs on dedicated Dell hardware equipped with an **Intel I350-T4 1GbE Quad-Port NIC**, providing separate physical interfaces for WAN and segmented internal networks. All network segments connect through a **24-port Gigabit managed switch**, supporting VLAN separation, device isolation, and centralized network management.
 
 ## 🖥️ pfSense Dashboard & Network Overview
 
@@ -52,7 +58,7 @@ OpenVPN server configured directly in pfSense for secure remote access using **c
 
 ![OpenVPN Clients](images/OpenvpnClients1.png)
 
-Three devices connected locally over the LAN tunnel and one cellular device connecting remotely from outside the network over WAN. Shows real IP addresses, virtual tunnel IPs in the 10.0.23.x range, bytes transferred per session, and the cipher in use.
+Live view of active OpenVPN client sessions showing multiple devices tunneled back into the home network remotely. Displays real IP addresses, virtual tunnel IPs (10.0.23.x range), bytes transferred per session, and cipher negotiated.
 
 ---
 
@@ -192,6 +198,6 @@ TrueNAS Scale functions as a **KVM-based Type 1 bare-metal hypervisor**. Provisi
 
 ## 🙋 Author
 
-**Nicholas Efstathiou**  
+**Nick Efstathiou**  
 Cybersecurity | Network Engineering | Home Lab  
 [LinkedIn](https://www.linkedin.com/in/NickStat23)
