@@ -50,7 +50,7 @@ pfSense Plus dashboard showing all active interfaces, live OpenVPN tunnel sessio
 
 ![OpenVPN Server](images/OpenVPNServer.png)
 
-OpenVPN server configured directly in pfSense for secure remote access using **certificate-based authentication** (no username/password only). Tunnels use **AES-256 encryption** for all data in transit.
+OpenVPN server configured directly in pfSense for secure remote access. Tunnels use **AES-256 encryption** for all data in transit.
 
 ---
 
