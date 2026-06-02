@@ -120,10 +120,9 @@ LAN rules are organized into labeled sections for clarity. The same ruleset is m
 | DNS | IPv4 UDP/TCP | 53 / 853 (DoT) | Pi-Hole DNS outgoing + DNS-over-TLS via Pi-Hole |
 | DNS | IPv4 UDP/TCP | 53 / 853 | Allow fallback to external DNS (Google, Cloudflare) |
 | HTTP/HTTPS | IPv4 TCP | 80 / 443 | Standard web traffic from LAN subnets |
-| HTTPS | IPv4 TCP | 10443 | pfSense & Asus Router secure config port at 192.168.21.1/192.168.50.10 |
+| HTTPS | IPv4 TCP | 10443 | pfSense & Asus Router secure config port for 192.168.21.1 & 192.168.50.10 |
 | NTP | IPv4 UDP | 123 | Time sync to LAN address + LAN subnets |
 | RADIUS | IPv4 UDP | 1812 | FreeRADIUS auth server at 192.168.21.1 |
-| RADIUS | IPv4 UDP | 1812 | Asus router RADIUS verification at 192.168.50.10 |
 | VPN | IPv4 UDP | 1194 (OpenVPN) | LAN to OPENVPN_NEW subnets |
 | Plex | IPv4 TCP | 32400 | TrueNAS Plex server at 192.168.21.12 |
 | TrueNAS | IPv4 TCP/UDP | * | TrueNAS all outgoing (192.168.21.12) |
