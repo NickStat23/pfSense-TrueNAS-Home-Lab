@@ -132,6 +132,25 @@ LAN rules are organized into labeled sections for clarity. The same ruleset is m
 
 ---
 
+## 🚫 pfBlockerNG IP Blocking & GeoIP
+
+![pfBlockerNG Alerts](images/pfSense_pfBlockerNG.png)
+
+pfBlockerNG runs on pfSense as a dedicated IP reputation and GeoIP blocking layer. It pulls from multiple real-world threat intelligence feeds and blocks malicious IPs at the firewall level before they ever reach the network. It also has selected countries blocked entirely via GeoIP, adding a layer of protection that operates independently from Pi-hole.
+
+Pi-hole handles DNS-based blocking while pfBlockerNG handles IP and GeoIP-based blocking. The two run alongside each other so anything Pi-hole misses at the DNS layer, pfBlockerNG can catch at the network layer.
+
+**Active threat feeds visible in screenshot:**
+- `CINS_army_v4` — CINS Army known bad actors
+- `ET_Block_v4` — Emerging Threats IP blocklist
+- `ISC_Block_v4` — SANS Internet Storm Center blocklist
+- `Spamhaus_Drop_v4` — Spamhaus DROP list
+- `RU_v4` — Russia GeoIP block
+
+**Countries blocked in this snapshot:** CH, US (flagged IPs), RU, BG, RO, NL, GB, LU, AE
+
+---
+
 ## 🗄️ TrueNAS Server Dashboard
 
 ![TrueNAS Dashboard](images/TrueNAS_Dashboard.png)
@@ -196,6 +215,6 @@ TrueNAS Scale functions as a **KVM-based Type 1 bare-metal hypervisor**. Provisi
 
 ## 🙋 Author
 
-**Nick Efstathiou**  
+**Nicholas Efstathiou**  
 Cybersecurity | Network Engineering | Home Lab  
 [LinkedIn](https://www.linkedin.com/in/NickStat23)
