@@ -11,7 +11,7 @@ A fully production-deployed, segmented home network built on dedicated hardware 
 | Firewall / Router | Netgate pfSense Plus 26.03 (FreeBSD 16.0) |
 | Firewall Hardware | Dell Inc.; Intel Core i5-7500 @ 3.40GHz, AES-NI enabled |
 | Network Interface Card | Intel I350-T4 1GbE Quad-Port NIC |
-| Switching | 24-Port Gigabit Managed Switch |
+| Switching | TP-Link 24-Port Gigabit Managed Switch |
 | VPN | OpenVPN (certificate-based) + NordVPN client |
 | IDS/IPS | Suricata with live threat rulesets |
 | DNS Filtering | Pi-hole (network-wide, 50%+ block rate) |
