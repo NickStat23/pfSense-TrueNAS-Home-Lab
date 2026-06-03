@@ -134,7 +134,7 @@ LAN rules are organized into labeled sections for clarity. The same ruleset is m
 
 ## 🚫 pfBlockerNG IP Blocking & GeoIP
 
-![pfBlockerNG Alerts](images/pfSense_pfBlockerNG.png)
+![pfBlockerNG Alerts](images/pfSense_pfBlockerNG1.png)
 
 pfBlockerNG runs on pfSense as a dedicated IP reputation and GeoIP blocking layer. It pulls from multiple real-world threat intelligence feeds and blocks malicious IPs at the firewall level before they ever reach the network. It also has selected countries blocked entirely via GeoIP, adding a layer of protection that operates independently from Pi-hole.
 
