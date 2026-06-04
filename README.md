@@ -64,7 +64,7 @@ Live view of active OpenVPN client sessions showing multiple devices tunneled ba
 
 ## 🏅 SSL/TLS Certificate Management (ACME)
 
-![ACME Certificates](images/ACME_Certificates.png)
+![ACME Certificates](images/ACME_Certificates1.png)
 
 ACME certificate manager in pfSense handling automatic issuance and renewal of valid SSL/TLS certificates for all internal self-hosted services. Eliminates browser security warnings across the network without exposing services to the public internet.
 
