@@ -142,7 +142,6 @@ LAN rules are organized into labeled sections for clarity. All outbound traffic 
 | SSH | IPv4 TCP | 22222 | default | SSH access to pfSense local management only |
 | DNS | IPv4 UDP/TCP | 53 / 853 (DoT) | default | Pi-Hole DNS outgoing + DNS-over-TLS via Pi-Hole |
 | HTTP/HTTPS | IPv4 TCP | 80 / 443 | default | Allow Hypertext Transfer Protocol/Secure  |
-| HTTPS | IPv4 TCP | 10443 | default | pfSense and Asus Router secure config access |
 | NTP | IPv4 UDP | 123 | default | Time sync to LAN address and LAN subnets |
 | RADIUS | IPv4 UDP | 1812 | default | FreeRADIUS auth server at 192.168.21.1 |
 | VPN | IPv4 UDP | 1194 (OpenVPN) | default | LAN to OPENVPN_NEW subnets |
