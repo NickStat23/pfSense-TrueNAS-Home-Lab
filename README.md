@@ -21,6 +21,7 @@ A fully production-deployed, segmented home network built on dedicated hardware 
 | Private Cloud | Nextcloud (locked behind OpenVPN tunnel) |
 | Media Server | Plex Media Server |
 | DNS Blocker | pfBlockerNG DNSBL |
+| GeoIP Intelligence | MaxMind GeoLite2 (Suricata + pfBlockerNG) |
 | Hypervisor | KVM (Type 1, bare-metal on TrueNAS Scale) |
 
 ---
@@ -70,11 +71,23 @@ ACME certificate manager in pfSense handling automatic issuance and renewal of v
 
 ---
 
+## 📶 WPA2-Enterprise Wireless Authentication (FreeRADIUS / 802.1X)
+
+![RADIUS Enterprise WPA2](images/Radius_Enterprise_WPA2.png)
+
+Most home networks run WPA2-Personal, which means every device shares the same password. This network runs **WPA2-Enterprise with EAP-TTLS**, the same authentication standard used by corporate and university environments. FreeRADIUS is configured directly on pfSense and issues individual credential-based authentication challenges to every device that tries to connect to the wireless network.
+
+The ASUS RT-AC3100 operates in **Access Point mode** and offloads all authentication decisions to the FreeRADIUS server at 192.168.21.1 over UDP port 1812. The Windows Wi-Fi properties panel in the screenshot confirms the connection is authenticated via **Microsoft: EAP-TTLS**, which verifies the client is talking to the correct RADIUS server before credentials are ever exchanged.
+
+This means no shared password exists on the network. Each user authenticates with their own credentials, failed attempts are logged centrally in pfSense, and rogue devices cannot join even if they know the SSID.
+
+---
+
 ## 🛡️ Suricata IDS/IPS; Interface Configuration
 
 ![Suricata Interfaces](images/Suricata_Interfaces.png)
 
-Suricata IDS/IPS deployed across **all network interfaces**; WAN, LAN, ASUS, and LOREX segments run independent inspection engines. Each interface monitors traffic in real-time with automated threat blocking enabled, meaning malicious traffic is not just detected but actively dropped.
+Suricata IDS/IPS deployed across **all network interfaces**; WAN, LAN, ASUS, and LOREX segments run independent inspection engines. Each interface monitors traffic in real-time with automated threat blocking enabled, meaning malicious traffic is not just detected but actively dropped. GeoIP lookups are powered by the **MaxMind GeoLite2** database, allowing Suricata to correlate alerts with source country data for richer threat context.
 
 ---
 
@@ -136,7 +149,7 @@ LAN rules are organized into labeled sections for clarity. The same ruleset is m
 
 ![pfBlockerNG Alerts](images/pfSense_pfBlockerNG1.png)
 
-pfBlockerNG runs on pfSense as a dedicated IP reputation and GeoIP blocking layer. It pulls from multiple real-world threat intelligence feeds and blocks malicious IPs at the firewall level before they ever reach the network. It also has selected countries blocked entirely via GeoIP, adding a layer of protection that operates independently from Pi-hole.
+pfBlockerNG runs on pfSense as a dedicated IP reputation and GeoIP blocking layer. It pulls from multiple real-world threat intelligence feeds and blocks malicious IPs at the firewall level before they ever reach the network. GeoIP enforcement is powered by the **MaxMind GeoLite2** database, which pfBlockerNG uses to resolve IP addresses to countries and apply regional blocks. Selected countries are blocked entirely at the firewall level, adding a layer of protection that operates independently from Pi-hole.
 
 Pi-hole handles DNS-based blocking while pfBlockerNG handles IP and GeoIP-based blocking. The two run alongside each other so anything Pi-hole misses at the DNS layer, pfBlockerNG can catch at the network layer.
 
