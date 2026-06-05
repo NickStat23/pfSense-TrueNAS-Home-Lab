@@ -132,7 +132,7 @@ ICMP and IGMP are selectively permitted for network diagnostics only via IGMPNet
 
 ![LAN Firewall Rules](images/LAN_Firewall_Rules1.png)
 
-LAN rules are organized into labeled sections for clarity. The same ruleset is mirrored on the **LOREX (camera system)** and **ASUS (Wi-Fi)** interfaces to ensure consistent policy across all isolated network zones.
+LAN rules are organized into labeled sections for clarity. All outbound traffic from LAN subnets is routed through the NORDVPN_VPNV4 gateway, meaning every device on the network exits through the encrypted NordVPN tunnel without any per-device configuration. The same ruleset is mirrored on the LOREX (camera system) and ASUS (Wi-Fi) interfaces to ensure consistent policy across all isolated network zones.
 
 | Section | Protocol | Port | Description |
 |---|---|---|---|
