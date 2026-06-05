@@ -137,10 +137,11 @@ LAN rules are organized into labeled sections for clarity. All outbound traffic 
 | Section | Protocol | Port | Gateway | Description |
 |---|---|---|---|---|
 | Anti-Lockout | IPv4 TCP | 10443 | default | Admin access protection; prevents lockout from LAN |
+| ANY | IPv4 ANY | ANY | NORDVPN_VPNV4 | All standard web traffic routed through NordVPN tunnel |
 | NAT | IPv4 UDP | 53 (DNS) | default | Force all DNS through Pi-Hole at 192.168.21.12 |
 | SSH | IPv4 TCP | 22222 | default | SSH access to pfSense local management only |
 | DNS | IPv4 UDP/TCP | 53 / 853 (DoT) | default | Pi-Hole DNS outgoing + DNS-over-TLS via Pi-Hole |
-| HTTP/HTTPS | IPv4 TCP | 80 / 443 | NORDVPN_VPNV4 | All standard web traffic routed through NordVPN tunnel |
+| HTTP/HTTPS | IPv4 TCP | 80 / 443 | default | All standard web traffic routed through NordVPN tunnel |
 | HTTPS | IPv4 TCP | 10443 | default | pfSense and Asus Router secure config access |
 | NTP | IPv4 UDP | 123 | default | Time sync to LAN address and LAN subnets |
 | RADIUS | IPv4 UDP | 1812 | default | FreeRADIUS auth server at 192.168.21.1 |
