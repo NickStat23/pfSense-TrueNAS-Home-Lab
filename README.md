@@ -32,7 +32,7 @@ The pfSense firewall runs on dedicated Dell hardware equipped with an **Intel I3
 
 ## 🖥️ pfSense Dashboard & Network Overview
 
-![pfSense Dashboard](images/pfSense_Dashboard.png)
+![pfSense Dashboard](images/pfSense_Dashboard1.png)
 
 pfSense Plus dashboard showing all active interfaces, live OpenVPN tunnel sessions, and running services. The network has been live for **20+ days of continuous uptime** with all core services healthy and operational.
 
