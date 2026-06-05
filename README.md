@@ -47,6 +47,52 @@ pfSense Plus dashboard showing all active interfaces, live OpenVPN tunnel sessio
 
 ---
 
+## 🌐 WAN Firewall Rules
+
+![WAN Firewall Rules](images/WAN_Firewall_Rules.png)
+
+WAN ruleset built on a **minimal attack surface / default deny** philosophy. Only two inbound ports are intentionally open to the internet:
+
+| Rule | Protocol | Port | Destination | Purpose |
+|---|---|---|---|---|
+| ✅ Allow | IPv4 UDP | 1194 (OpenVPN) | WAN address | Remote VPN access |
+| ✅ Allow | IPv4 TCP | 32400 (Plex) | 192.168.21.12 | Plex Media Server remote streaming |
+| ✅ NAT | IPv4 TCP/UDP | 53 (DNS) | 192.168.21.12 | Pi-Hole DNS forwarding |
+| ❌ Block | * | * | RFC 1918 networks | Block all private network spoofing |
+| ❌ Block | * | * | Bogon networks | Block reserved/unassigned address space |
+| ❌ Block | IPv6 | * | * | IPv6 fully disabled and blocked |
+| ❌ Block | IPv4 | * | WAN address | Block all other unsolicited inbound traffic |
+
+ICMP and IGMP are selectively permitted for network diagnostics only via IGMPNetworks alias. All other inbound traffic is rejected by implicit default deny.
+
+---
+
+## 🏠 LAN Firewall Rules
+
+![LAN Firewall Rules](images/LAN_Firewall_Rules1.png)
+
+LAN rules are organized into labeled sections for clarity. All outbound traffic from LAN subnets is routed through the NORDVPN_VPNV4 gateway, meaning every device on the network exits through the encrypted NordVPN tunnel without any per-device configuration. The same ruleset is mirrored on the LOREX (camera system) and ASUS (Wi-Fi) interfaces to ensure consistent policy across all isolated network zones.
+
+| Section | Protocol | Port | Gateway | Description |
+|---|---|---|---|---|
+| Anti-Lockout | IPv4 TCP | 10443 | default | Admin access protection; prevents lockout from LAN |
+| ANY | IPv4 ANY | ANY | NORDVPN_VPNV4 | All traffic routed through NordVPN tunnel |
+| NAT | IPv4 UDP | 53 (DNS) | default | Force all DNS through Pi-Hole at 192.168.21.12 |
+| SSH | IPv4 TCP | 22222 | default | SSH access to pfSense local management only |
+| DNS | IPv4 UDP/TCP | 53 / 853 (DoT) | default | Pi-Hole DNS outgoing + DNS-over-TLS via Pi-Hole |
+| HTTP/HTTPS | IPv4 TCP | 80 / 443 | default | Allow Hypertext Transfer Protocol/Secure  |
+| NTP | IPv4 UDP | 123 | default | Time sync to LAN address and LAN subnets |
+| RADIUS | IPv4 UDP | 1812 | default | FreeRADIUS auth server at 192.168.21.1 |
+| VPN | IPv4 UDP | 1194 (OpenVPN) | default | LAN to OPENVPN_NEW subnets |
+| Plex | IPv4 TCP | 32400 | default | TrueNAS Plex server at 192.168.21.12 |
+| TrueNAS | IPv4 TCP/UDP | * | default | TrueNAS all outgoing (192.168.21.12) |
+| IGMP/ICMP | IPv4 IGMP/ICMP | * | default | Multicast and diagnostic traffic via IGMPNetworks alias |
+| ❌ Block | IPv4 | * | * | Block WAN subnets from entering LAN; hard isolation |
+
+> **Note:** LOREX (IP camera system, 192.168.8.x) and ASUS Wi-Fi (192.168.50.x) run identical firewall rulesets, ensuring IoT devices and wireless clients are held to the same strict traffic policy as the main LAN with no inter-VLAN communication unless explicitly permitted.
+
+---
+
 ## 🔐 OpenVPN Server Configuration
 
 ![OpenVPN Server](images/OpenVPNServer.png)
@@ -111,52 +157,6 @@ Suricata IDS/IPS deployed across **all network interfaces**; WAN, LAN, ASUS, and
 ![Suricata Live Threats](images/Suricata_LiveThreats.png)
 
 Live Suricata alert log showing real detections including **port scans**, **MySQL/PostgreSQL inbound probe attempts**, **NMAP scan detection**, and other suspicious traffic patterns. This demonstrates the IDS/IPS actively catching reconnaissance activity and automated attack attempts against the network in real time.
-
----
-
-## 🌐 WAN Firewall Rules
-
-![WAN Firewall Rules](images/WAN_Firewall_Rules.png)
-
-WAN ruleset built on a **minimal attack surface / default deny** philosophy. Only two inbound ports are intentionally open to the internet:
-
-| Rule | Protocol | Port | Destination | Purpose |
-|---|---|---|---|---|
-| ✅ Allow | IPv4 UDP | 1194 (OpenVPN) | WAN address | Remote VPN access |
-| ✅ Allow | IPv4 TCP | 32400 (Plex) | 192.168.21.12 | Plex Media Server remote streaming |
-| ✅ NAT | IPv4 TCP/UDP | 53 (DNS) | 192.168.21.12 | Pi-Hole DNS forwarding |
-| ❌ Block | * | * | RFC 1918 networks | Block all private network spoofing |
-| ❌ Block | * | * | Bogon networks | Block reserved/unassigned address space |
-| ❌ Block | IPv6 | * | * | IPv6 fully disabled and blocked |
-| ❌ Block | IPv4 | * | WAN address | Block all other unsolicited inbound traffic |
-
-ICMP and IGMP are selectively permitted for network diagnostics only via IGMPNetworks alias. All other inbound traffic is rejected by implicit default deny.
-
----
-
-## 🏠 LAN Firewall Rules
-
-![LAN Firewall Rules](images/LAN_Firewall_Rules1.png)
-
-LAN rules are organized into labeled sections for clarity. All outbound traffic from LAN subnets is routed through the NORDVPN_VPNV4 gateway, meaning every device on the network exits through the encrypted NordVPN tunnel without any per-device configuration. The same ruleset is mirrored on the LOREX (camera system) and ASUS (Wi-Fi) interfaces to ensure consistent policy across all isolated network zones.
-
-| Section | Protocol | Port | Gateway | Description |
-|---|---|---|---|---|
-| Anti-Lockout | IPv4 TCP | 10443 | default | Admin access protection; prevents lockout from LAN |
-| ANY | IPv4 ANY | ANY | NORDVPN_VPNV4 | All traffic routed through NordVPN tunnel |
-| NAT | IPv4 UDP | 53 (DNS) | default | Force all DNS through Pi-Hole at 192.168.21.12 |
-| SSH | IPv4 TCP | 22222 | default | SSH access to pfSense local management only |
-| DNS | IPv4 UDP/TCP | 53 / 853 (DoT) | default | Pi-Hole DNS outgoing + DNS-over-TLS via Pi-Hole |
-| HTTP/HTTPS | IPv4 TCP | 80 / 443 | default | Allow Hypertext Transfer Protocol/Secure  |
-| NTP | IPv4 UDP | 123 | default | Time sync to LAN address and LAN subnets |
-| RADIUS | IPv4 UDP | 1812 | default | FreeRADIUS auth server at 192.168.21.1 |
-| VPN | IPv4 UDP | 1194 (OpenVPN) | default | LAN to OPENVPN_NEW subnets |
-| Plex | IPv4 TCP | 32400 | default | TrueNAS Plex server at 192.168.21.12 |
-| TrueNAS | IPv4 TCP/UDP | * | default | TrueNAS all outgoing (192.168.21.12) |
-| IGMP/ICMP | IPv4 IGMP/ICMP | * | default | Multicast and diagnostic traffic via IGMPNetworks alias |
-| ❌ Block | IPv4 | * | * | Block WAN subnets from entering LAN; hard isolation |
-
-> **Note:** LOREX (IP camera system, 192.168.8.x) and ASUS Wi-Fi (192.168.50.x) run identical firewall rulesets, ensuring IoT devices and wireless clients are held to the same strict traffic policy as the main LAN with no inter-VLAN communication unless explicitly permitted.
 
 ---
 
