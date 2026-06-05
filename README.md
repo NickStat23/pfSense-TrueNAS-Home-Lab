@@ -88,7 +88,7 @@ ACME certificate manager in pfSense handling automatic issuance and renewal of v
 
 ## 📶 WPA2-Enterprise Wireless Authentication (FreeRADIUS / 802.1X)
 
-![RADIUS Enterprise WPA2](images/Radius_Enterprise_WPA2.png)
+![RADIUS Enterprise WPA2](images/Radius_Enterprise_WPA2_.png)
 
 Most home networks run WPA2-Personal, which means every device shares the same password. This network runs **WPA2-Enterprise with EAP-TTLS**, the same authentication standard used by corporate and university environments. FreeRADIUS is configured directly on pfSense and issues individual credential-based authentication challenges to every device that tries to connect to the wireless network.
 
