@@ -130,7 +130,7 @@ ICMP and IGMP are selectively permitted for network diagnostics only via IGMPNet
 
 ## 🏠 LAN Firewall Rules
 
-![LAN Firewall Rules](images/LAN_Firewall_Rules.png)
+![LAN Firewall Rules](images/LAN_Firewall_Rules1.png)
 
 LAN rules are organized into labeled sections for clarity. The same ruleset is mirrored on the **LOREX (camera system)** and **ASUS (Wi-Fi)** interfaces to ensure consistent policy across all isolated network zones.
 
