@@ -59,7 +59,16 @@ OpenVPN server configured directly in pfSense for secure remote access. Tunnels 
 
 ![OpenVPN Clients](images/OpenvpnClients2.png)
 
-Live view of active OpenVPN client sessions showing multiple devices tunneled back into the home network remotely. Displays real IP addresses, virtual tunnel IPs (10.0.23.x range), bytes transferred per session, and cipher negotiated.
+Live view of the pfSense OpenVPN status page showing two separate VPN functions running simultaneously: an inbound remote access server with three active client sessions, and an outbound NordVPN client tunnel routing all internet traffic through an encrypted connection.
+
+**Active inbound sessions (ovpns2, UDP 1194):**
+- Nick's phone connecting remotely from WAN over AES-256-GCM
+- Android TV Box connected locally for Plex streaming over AES-256-GCM
+- Nick's PC connected locally for NAS access over AES-256-GCM
+
+**Outbound NordVPN client (ovpnc1):**
+- Status: Connected (Success) over UDP4 to a NordVPN server
+- All outbound internet traffic from the network is routed through the encrypted NordVPN tunnel at the firewall level, meaning no individual device needs a VPN app installed
 
 ---
 
