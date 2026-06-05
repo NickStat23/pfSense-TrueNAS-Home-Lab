@@ -72,7 +72,7 @@ Live view of the pfSense OpenVPN status page showing two separate VPN functions 
 
 ---
 
-![Mobile Remote Access](images/Mobile_Remote_Access.jpg)
+![Mobile Remote Access](images/Mobile_Remote_Access.png)
 
 Securely connected to OpenVPN from my Android device, giving me full remote access to my NAS storage and Nextcloud from outside my home network.
 
