@@ -2,7 +2,7 @@
 
 A production home network running on dedicated hardware with **Netgate pfSense Plus** as the firewall/router and a self-hosted **TrueNAS Scale** server handling storage and virtualization. Everything runs on bare metal across multiple isolated network segments supporting 20+ active devices.
 
-> 🗓️ **Started in 2021 on an older i5 that didn't have AES-NI support, so it couldn't handle the cryptography needed to actually run an OpenVPN server. Started off on IPFire, switched to pfSense after a few months, and pretty quickly figured out I needed the right hardware to go with it. Picked up this Dell with a compatible i5 processor, threw in an Intel I350 NIC, and made sure I had enough RAM to run everything without it falling apart. TrueNAS was added around June 2025. Both systems are always getting upgraded, new software, new configs, this project never really has a finish line.
+> 🗓️ **Started in 2021 on an older Intel i5 PC that didn't have AES-NI support, so it couldn't handle the cryptography needed to actually run an OpenVPN server. Started off on IPFire, switched to pfSense after a few months, and pretty quickly figured out I needed the right hardware to go with it. Picked up this Dell with a compatible i5 processor, threw in an Intel I350 NIC, and made sure I had enough RAM to run everything without it falling apart. TrueNAS was added around June 2025. Both systems are always getting upgraded, new software, new configs, this project never really has a finish line.
 ---
 
 ## 🧰 Technologies & Tools
