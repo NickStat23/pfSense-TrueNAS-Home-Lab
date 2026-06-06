@@ -187,7 +187,7 @@ pfBlockerNG adds an IP reputation and GeoIP blocking layer on top of everything 
 TrueNAS Scale running on dedicated bare-metal hardware:
 
 - **CPU:** Intel Core i7-6700
-- **RAM:** 62.7 GB
+- **RAM:** 64 GB
 - **Storage:** 18TB across two drives
 - **Role:** NAS + Type 1 KVM hypervisor running Plex, Pi-hole, and Nextcloud
 
