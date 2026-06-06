@@ -1,6 +1,8 @@
 # 🔒 pfSense + TrueNAS Home Lab
 
-A fully production-deployed, segmented home network built on dedicated hardware running **Netgate pfSense Plus** and a self-hosted **TrueNAS Scale** NAS server. Core services run on bare metal, with additional virtualized workloads hosted through the TrueNAS Scale KVM hypervisor. The environment supports 20+ active devices across multiple isolated network segments.
+A production home network running on dedicated hardware with **Netgate pfSense Plus** as the firewall/router and a self-hosted **TrueNAS Scale** server handling storage and virtualization. Everything runs on bare metal across multiple isolated network segments supporting 20+ active devices.
+
+> 🗓️ **Started in 2021, still going.** The pfSense side has been running and evolving since 2021. TrueNAS was added about a year ago. This is an ongoing project.
 
 ---
 
@@ -28,13 +30,15 @@ A fully production-deployed, segmented home network built on dedicated hardware 
 
 ## 🔌 Physical Network Infrastructure
 
-The pfSense firewall runs on dedicated Dell hardware equipped with an **Intel I350-T4 1GbE Quad-Port NIC**, providing separate physical interfaces for WAN and segmented internal networks. All network segments connect through a **24-port Gigabit managed switch**, supporting VLAN separation, device isolation, and centralized network management.
+The firewall runs on dedicated Dell hardware with an **Intel I350-T4 Quad-Port NIC**, giving each network segment its own physical interface. Everything connects through a **24-port Gigabit managed switch** with VLAN separation and device isolation.
+
+---
 
 ## 🖥️ pfSense Dashboard & Network Overview
 
 ![pfSense Dashboard](images/pfSense_Dashboard1.png)
 
-pfSense Plus dashboard showing all active interfaces, live OpenVPN tunnel sessions, and running services. The network has been live for **20+ days of continuous uptime** with all core services healthy and operational.
+pfSense dashboard showing all active interfaces, live OpenVPN sessions, and running services. Network has been up for **20+ days of continuous uptime** with everything healthy.
 
 **Active Interfaces:**
 - `WAN`; 1000baseT full-duplex (internet uplink)
@@ -51,7 +55,7 @@ pfSense Plus dashboard showing all active interfaces, live OpenVPN tunnel sessio
 
 ![WAN Firewall Rules](images/WAN_Firewall_Rules.png)
 
-WAN ruleset built on a **minimal attack surface / default deny** philosophy. Only two inbound ports are intentionally open to the internet:
+WAN ruleset is built around a **default deny / minimal attack surface** approach. Only two ports are intentionally open to the internet:
 
 | Rule | Protocol | Port | Destination | Purpose |
 |---|---|---|---|---|
@@ -63,7 +67,7 @@ WAN ruleset built on a **minimal attack surface / default deny** philosophy. Onl
 | ❌ Block | IPv6 | * | * | IPv6 fully disabled and blocked |
 | ❌ Block | IPv4 | * | WAN address | Block all other unsolicited inbound traffic |
 
-ICMP and IGMP are selectively permitted for network diagnostics only via IGMPNetworks alias. All other inbound traffic is rejected by implicit default deny.
+ICMP and IGMP are allowed selectively for diagnostics via the IGMPNetworks alias. Everything else is dropped by default deny.
 
 ---
 
@@ -71,16 +75,16 @@ ICMP and IGMP are selectively permitted for network diagnostics only via IGMPNet
 
 ![LAN Firewall Rules](images/LAN_Firewall_Rules1.png)
 
-LAN rules are organized into labeled sections for clarity. All outbound traffic from LAN subnets is routed through the NORDVPN_VPNV4 gateway, meaning every device on the network exits through the encrypted NordVPN tunnel without any per-device configuration. The same ruleset is mirrored on the LOREX (camera system) and ASUS (Wi-Fi) interfaces to ensure consistent policy across all isolated network zones.
+All outbound LAN traffic is routed through the NORDVPN_VPNV4 gateway, so every device on the network exits through NordVPN at the firewall level with no per-device configuration needed. The same ruleset runs on the LOREX and ASUS interfaces so nothing gets treated differently across segments.
 
 | Section | Protocol | Port | Gateway | Description |
 |---|---|---|---|---|
-| Anti-Lockout | IPv4 TCP | 10443 | default | Admin access protection; prevents lockout from LAN |
+| Anti-Lockout | IPv4 TCP | 10443 | default | Prevents accidental admin lockout from LAN |
 | ANY | IPv4 ANY | ANY | NORDVPN_VPNV4 | All traffic routed through NordVPN tunnel |
 | NAT | IPv4 UDP | 53 (DNS) | default | Force all DNS through Pi-Hole at 192.168.21.12 |
 | SSH | IPv4 TCP | 22222 | default | SSH access to pfSense local management only |
 | DNS | IPv4 UDP/TCP | 53 / 853 (DoT) | default | Pi-Hole DNS outgoing + DNS-over-TLS via Pi-Hole |
-| HTTP/HTTPS | IPv4 TCP | 80 / 443 | default | Allow Hypertext Transfer Protocol/Secure  |
+| HTTP/HTTPS | IPv4 TCP | 80 / 443 | default | Allow Hypertext Transfer Protocol/Secure |
 | NTP | IPv4 UDP | 123 | default | Time sync to LAN address and LAN subnets |
 | RADIUS | IPv4 UDP | 1812 | default | FreeRADIUS auth server at 192.168.21.1 |
 | VPN | IPv4 UDP | 1194 (OpenVPN) | default | LAN to OPENVPN_NEW subnets |
@@ -89,7 +93,7 @@ LAN rules are organized into labeled sections for clarity. All outbound traffic 
 | IGMP/ICMP | IPv4 IGMP/ICMP | * | default | Multicast and diagnostic traffic via IGMPNetworks alias |
 | ❌ Block | IPv4 | * | * | Block WAN subnets from entering LAN; hard isolation |
 
-> **Note:** LOREX (IP camera system, 192.168.8.x) and ASUS Wi-Fi (192.168.50.x) run identical firewall rulesets, ensuring IoT devices and wireless clients are held to the same strict traffic policy as the main LAN with no inter-VLAN communication unless explicitly permitted.
+> **Note:** LOREX (192.168.8.x) and ASUS Wi-Fi (192.168.50.x) run the same ruleset as LAN. No inter-VLAN communication unless explicitly permitted.
 
 ---
 
@@ -97,7 +101,7 @@ LAN rules are organized into labeled sections for clarity. All outbound traffic 
 
 ![OpenVPN Server](images/OpenVPNServer.png)
 
-OpenVPN server configured directly in pfSense for secure remote access. Tunnels use **AES-256 encryption** for all data in transit.
+OpenVPN server running directly on pfSense for remote access. All tunnels use **AES-256 encryption** end to end.
 
 ---
 
@@ -105,7 +109,7 @@ OpenVPN server configured directly in pfSense for secure remote access. Tunnels 
 
 ![OpenVPN Clients](images/OpenvpnClients2.png)
 
-Live view of the pfSense OpenVPN status page showing two separate VPN functions running simultaneously: an inbound remote access server with three active client sessions, and an outbound NordVPN client tunnel routing all internet traffic through an encrypted connection.
+Live OpenVPN status showing two things running at the same time: an inbound remote access server with three active client sessions, and an outbound NordVPN tunnel routing all internet traffic out through an encrypted connection.
 
 **Active inbound sessions (ovpns2, UDP 1194):**
 - Nick's phone connecting remotely from WAN over AES-256-GCM
@@ -113,14 +117,14 @@ Live view of the pfSense OpenVPN status page showing two separate VPN functions 
 - Nick's PC connected locally for NAS access over AES-256-GCM
 
 **Outbound NordVPN client (ovpnc1):**
-- Status: Connected (Success) over UDP4 to a NordVPN server
-- All outbound internet traffic from the network is routed through the encrypted NordVPN tunnel at the firewall level, meaning no individual device needs a VPN app installed
+- Status: Connected over UDP4 to a NordVPN server
+- All outbound traffic from the network routes through NordVPN at the firewall level, no VPN app needed on any device
 
 ---
 
 ![Mobile Remote Access](images/Mobile_Remote_Access.png)
 
-Securely connected to OpenVPN from my Android device, giving me full remote access to my NAS storage and Nextcloud from outside my home network.
+Three screens showing full remote access from my Android phone. Left: OpenVPN connected as "NickVPN" on UDP4-1194 with tunnel IP 10.0.23.4, running for 48 minutes with live throughput. Middle: browsing TrueNAS directly at 192.168.21.12 with all shares visible (8gb_drive, Datastore, plex_media_server, Storage_extrabackup). Right: Nextcloud fully accessible with all personal files and folders, everything tunneled through OpenVPN from outside the home network.
 
 ---
 
@@ -128,7 +132,7 @@ Securely connected to OpenVPN from my Android device, giving me full remote acce
 
 ![ACME Certificates](images/ACME_Certificates1.png)
 
-ACME certificate manager in pfSense handling automatic issuance and renewal of valid SSL/TLS certificates for all internal self-hosted services. Eliminates browser security warnings across the network without exposing services to the public internet.
+ACME handles automatic SSL/TLS certificate issuance and renewal for all internal self-hosted services. No browser security warnings anywhere on the network and nothing exposed to the public internet.
 
 ---
 
@@ -136,19 +140,19 @@ ACME certificate manager in pfSense handling automatic issuance and renewal of v
 
 ![RADIUS Enterprise WPA2](images/Radius_Enterprise_WPA2_.png)
 
-Most home networks run WPA2-Personal, which means every device shares the same password. This network runs **WPA2-Enterprise with EAP-TTLS**, the same authentication standard used by corporate and university environments. FreeRADIUS is configured directly on pfSense and issues individual credential-based authentication challenges to every device that tries to connect to the wireless network.
+Most home networks use WPA2-Personal where everyone shares the same password. This network runs **WPA2-Enterprise with EAP-TTLS**, the same standard used in corporate and university environments. FreeRADIUS is configured directly on pfSense and every device that connects to Wi-Fi gets its own individual authentication challenge.
 
-The ASUS RT-AC3100 operates in **Access Point mode** and offloads all authentication decisions to the FreeRADIUS server at 192.168.21.1 over UDP port 1812. The Windows Wi-Fi properties panel in the screenshot confirms the connection is authenticated via **Microsoft: EAP-TTLS**, which verifies the client is talking to the correct RADIUS server before credentials are ever exchanged.
+The ASUS RT-AC3100 runs in **Access Point mode** and hands all auth decisions off to the FreeRADIUS server at 192.168.21.1 over UDP 1812. The Windows Wi-Fi panel in the screenshot shows the connection authenticated via **Microsoft: EAP-TTLS**, which confirms the client verified it was talking to the correct RADIUS server before any credentials were sent.
 
-This means no shared password exists on the network. Each user authenticates with their own credentials, failed attempts are logged centrally in pfSense, and rogue devices cannot join even if they know the SSID.
+No shared password exists on this network. Every user has their own credentials, failed attempts are logged in pfSense, and unknown devices can't join even if they know the SSID.
 
 ---
 
-## 🛡️ Suricata IDS/IPS; Interface Configuration
+## 🛡️ Suricata IDS/IPS Interface Configuration
 
 ![Suricata Interfaces](images/Suricata_Interfaces.png)
 
-Suricata IDS/IPS deployed across **all network interfaces**; WAN, LAN, ASUS, and LOREX segments run independent inspection engines. Each interface monitors traffic in real-time with automated threat blocking enabled, meaning malicious traffic is not just detected but actively dropped. GeoIP lookups are powered by the **MaxMind GeoLite2** database, allowing Suricata to correlate alerts with source country data for richer threat context.
+Suricata runs on **all four interfaces** (WAN, LAN, ASUS, LOREX) with independent inspection engines on each. Threat blocking is active, so malicious traffic gets dropped, not just flagged. GeoIP data comes from **MaxMind GeoLite2** so every alert includes source country context.
 
 ---
 
@@ -156,7 +160,7 @@ Suricata IDS/IPS deployed across **all network interfaces**; WAN, LAN, ASUS, and
 
 ![Suricata Live Threats](images/Suricata_LiveThreats.png)
 
-Live Suricata alert log showing real detections including **port scans**, **MySQL/PostgreSQL inbound probe attempts**, **NMAP scan detection**, and other suspicious traffic patterns. This demonstrates the IDS/IPS actively catching reconnaissance activity and automated attack attempts against the network in real time.
+Live alert log with real detections including **port scans**, **MySQL/PostgreSQL probe attempts**, **NMAP scan detection**, and other recon activity. This is the IDS/IPS catching actual automated attacks hitting the network in real time.
 
 ---
 
@@ -164,16 +168,14 @@ Live Suricata alert log showing real detections including **port scans**, **MySQ
 
 ![pfBlockerNG Alerts](images/pfSense_pfBlockerNG1.png)
 
-pfBlockerNG runs on pfSense as a dedicated IP reputation and GeoIP blocking layer. It pulls from multiple real-world threat intelligence feeds and blocks malicious IPs at the firewall level before they ever reach the network. GeoIP enforcement is powered by the **MaxMind GeoLite2** database, which pfBlockerNG uses to resolve IP addresses to countries and apply regional blocks. Selected countries are blocked entirely at the firewall level, adding a layer of protection that operates independently from Pi-hole.
+pfBlockerNG adds an IP reputation and GeoIP blocking layer on top of everything else. It pulls from multiple threat intelligence feeds and blocks known bad IPs at the firewall before they ever touch the network. Works alongside Pi-hole so if something slips through at the DNS layer, pfBlockerNG catches it at the network layer.
 
-Pi-hole handles DNS-based blocking while pfBlockerNG handles IP and GeoIP-based blocking. The two run alongside each other so anything Pi-hole misses at the DNS layer, pfBlockerNG can catch at the network layer.
-
-**Active threat feeds visible in screenshot:**
-- `CINS_army_v4` — CINS Army known bad actors
-- `ET_Block_v4` — Emerging Threats IP blocklist
-- `ISC_Block_v4` — SANS Internet Storm Center blocklist
-- `Spamhaus_Drop_v4` — Spamhaus DROP list
-- `RU_v4` — Russia GeoIP block
+**Active threat feeds:**
+- `CINS_army_v4`: CINS Army known bad actors
+- `ET_Block_v4`: Emerging Threats IP blocklist
+- `ISC_Block_v4`: SANS Internet Storm Center blocklist
+- `Spamhaus_Drop_v4`: Spamhaus DROP list
+- `RU_v4`: Russia GeoIP block
 
 **Countries blocked in this snapshot:** CH, US (flagged IPs), RU, BG, RO, NL, GB, LU, AE
 
@@ -188,7 +190,7 @@ TrueNAS Scale running on dedicated bare-metal hardware:
 - **CPU:** Intel Core i7-6700
 - **RAM:** 62.7 GB
 - **Storage:** 18TB across two drives
-- **Role:** NAS and Type 1 KVM virtualization hypervisor with Plex Media Server, Pi-hole, and Nextcloud.
+- **Role:** NAS + Type 1 KVM hypervisor running Plex, Pi-hole, and Nextcloud
 
 ---
 
@@ -196,11 +198,11 @@ TrueNAS Scale running on dedicated bare-metal hardware:
 
 ![TrueNAS Installed Apps](images/TrueNAS_InstalledApps.png)
 
-Containerized applications running on TrueNAS Scale:
+Containerized apps running on TrueNAS Scale:
 
-- **Nextcloud**; private self-hosted cloud storage
-- **Pi-hole**; network-wide DNS ad/tracker blocking
-- **Plex**; local and remote media streaming
+- **Nextcloud**: private self-hosted cloud storage
+- **Pi-hole**: network-wide DNS ad/tracker blocking
+- **Plex**: local and remote media streaming
 
 ---
 
@@ -208,7 +210,7 @@ Containerized applications running on TrueNAS Scale:
 
 ![Nextcloud](images/TrueNAS_Nextcloud.png)
 
-Nextcloud deployed on TrueNAS as a fully private alternative to Google Drive or iCloud. Access is locked behind the **OpenVPN tunnel** with role-based permissions; files are never stored on third-party infrastructure.
+Nextcloud running on TrueNAS as a private alternative to Google Drive or iCloud. Access requires going through the **OpenVPN tunnel** and files never touch third-party infrastructure.
 
 ---
 
@@ -216,12 +218,12 @@ Nextcloud deployed on TrueNAS as a fully private alternative to Google Drive or 
 
 ![Pi-hole](images/TrueNAS_PiHole.png)
 
-Pi-hole running on TrueNAS handling **network-wide DNS filtering** across all connected devices:
+Pi-hole running on TrueNAS doing **network-wide DNS filtering** for every device on the network:
 
 - **69,917** total DNS queries processed
-- **34,996 blocked (50.1%)**; ads, trackers, and malicious domains
+- **34,996 blocked (50.1%)**: ads, trackers, and malicious domains
 - **2,146,983 domains** on the blocklist
-- Forced via pfSense NAT rule; no device can bypass it
+- Enforced via pfSense NAT rule so no device can bypass it
 
 ---
 
@@ -229,7 +231,7 @@ Pi-hole running on TrueNAS handling **network-wide DNS filtering** across all co
 
 ![Plex](images/TrueNAS_PlexMediaServer.png)
 
-Plex Media Server running on TrueNAS serving a local media library across the home network and remotely through a controlled port forward rule (TCP 32400) on pfSense WAN.
+Plex running on TrueNAS serving a local media library across the home network and remotely through a port forward rule (TCP 32400) on the pfSense WAN.
 
 ---
 
@@ -237,7 +239,7 @@ Plex Media Server running on TrueNAS serving a local media library across the ho
 
 ![TrueNAS Ubuntu VM](images/TrueNAS_Ubuntu.png)
 
-TrueNAS Scale functions as a **KVM-based Type 1 bare-metal hypervisor**. Provisioned an Ubuntu Desktop 22.04 VM with dedicated compute and storage resources for running self-hosted security tooling and lab environments directly on the NAS hardware.
+TrueNAS Scale doubles as a **KVM-based Type 1 hypervisor**. Running an Ubuntu Desktop 22.04 VM with dedicated compute and storage for self-hosted security tooling and lab work directly on the NAS hardware.
 
 ---
 
