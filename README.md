@@ -2,7 +2,7 @@
 
 A production home network running on dedicated hardware with **Netgate pfSense Plus** as the firewall/router and a self-hosted **TrueNAS Scale** server handling storage and virtualization. Everything runs on bare metal across multiple isolated network segments supporting 20+ active devices.
 
-> 🗓️ **Started in 2021, still going.** The pfSense side has been running and evolving since 2021. TrueNAS was added about a year ago. This is an ongoing project.
+> 🗓️ **Started in 2021, still going.** The pfSense side has been running and evolving since 2021. TrueNAS was added around June of 2025. This is an ongoing project.
 
 ---
 
