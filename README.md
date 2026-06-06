@@ -35,7 +35,7 @@ The firewall runs on dedicated Dell hardware with an **Intel I350-T4 Quad-Port N
 
 ## 🖥️ pfSense Dashboard & Network Overview
 
-![pfSense Dashboard](images/pfSense_Dashboard1.png)
+![pfSense Dashboard](images/pfSense_Dashboard_1.png)
 
 pfSense dashboard showing all active interfaces, live OpenVPN sessions, and running services. Network has been up for **20+ days of continuous uptime** with everything healthy.
 
