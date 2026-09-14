@@ -1,710 +1,459 @@
-# =====================================================================
-#  PI-HOLE ALLOWLIST (WHITELIST)
-#  Built 2026-09-14  --  tuned for: Amazon, YouTube, Yahoo Mail, TikTok,
-#  Alexa/Fire TV, smart TVs & streaming, game consoles, WFH & banking.
-#
-#  SYNTAX USED IN THIS FILE
-#    example.com     = exact allow      -> pihole allow example.com
-#    *.example.com   = wildcard allow   -> pihole --allow-wild example.com
-#                      (covers example.com AND everything under it)
-#
-#  Wildcards are used only where the whole domain is safe. Domains that
-#  mix real content with ad servers (yahoo.com, google.com, facebook.com)
-#  get exact entries only, so their ad subdomains stay blocked.
-#
-#  HOW TO USE
-#    CLI    : run pihole-setup.sh (handles both types automatically)
-#    Web UI : Domains -> Add. Paste the plain entries into the "Exact
-#             allowlist" box; for the *. entries, strip the "*." and add
-#             them to the "Regex allowlist" box as (\.|^)example\.com$
-#  No gravity rebuild needed for allowlist changes -- they apply instantly.
-# =====================================================================
-
-
-# =====================================================================
-# 0. CRITICAL INFRASTRUCTURE
-#    Blocking any of these produces the worst kind of failure: sites
-#    that hang, HTTPS errors, or "no internet" on a device that is
-#    plainly online. Allow these first and you avoid 80% of the
-#    "Pi-hole broke my network" support threads.
-# =====================================================================
-
-# --- Certificate validation (OCSP / CRL) ---
-# If these are blocked, browsers and phones can refuse HTTPS entirely.
-ocsp.digicert.com
-ocsp.pki.goog
-ocsp.sectigo.com
-ocsp.usertrust.com
-ocsp.comodoca.com
-ocsp.godaddy.com
-ocsp.entrust.net
-ocsp.apple.com
-ocsp2.apple.com
-crl.microsoft.com
-crl3.digicert.com
-crl4.digicert.com
-crl.globalsign.com
-crl.identrust.com
-isrg.trustid.ocsp.identrust.com
-status.rapidssl.com
-crt.sectigo.com
-*.lencr.org
-*.amazontrust.com
-o.ss2.us
-s.ss2.us
-ocsp.rootca1.amazontrust.com
-crl.rootca1.amazontrust.com
-
-# --- Captive portal & connectivity checks ---
-# Blocked = your phone/laptop thinks Wi-Fi has no internet and refuses
-# to use it. This one bites people constantly.
-captive.apple.com
-connectivitycheck.gstatic.com
-connectivitycheck.android.com
-clients3.google.com
-www.msftconnecttest.com
-msftconnecttest.com
-www.msftncsi.com
-msftncsi.com
-ipv6.msftconnecttest.com
-detectportal.firefox.com
-network-test.debian.org
-nmcheck.gnome.org
-
-# --- Time sync (NTP) ---
-# Wrong clock = every HTTPS certificate looks invalid.
-time.apple.com
-time.windows.com
-time.google.com
-time.nist.gov
-*.pool.ntp.org
-pool.ntp.org
-
-# --- Big CDNs -- half the web is served from these ---
-*.cloudfront.net
-*.akamaihd.net
-*.akamaized.net
-*.akamai.net
-*.fastly.net
-*.fastlylb.net
-*.llnwd.net
-*.edgekey.net
-*.edgesuite.net
-cdnjs.cloudflare.com
-cdn.jsdelivr.net
-unpkg.com
-ajax.googleapis.com
-
-# --- CAPTCHA / bot checks -- blocked = you can never prove you're human
-*.hcaptcha.com
-hcaptcha.com
-recaptcha.net
-www.recaptcha.net
-challenges.cloudflare.com
-
-
-# =====================================================================
-# 1. AMAZON  (shopping, Prime Video, Alexa, Fire TV, Kindle, Audible)
-#    amazon.com is wildcarded on purpose -- Amazon's actual ad network
-#    lives on amazon-adsystem.com, which stays BLOCKED.
-# =====================================================================
-
-*.amazon.com
-*.amazon.co.uk
-*.amazon.ca
-*.media-amazon.com
-*.ssl-images-amazon.com
-*.images-amazon.com
-*.amazonaws.com
-*.amazonvideo.com
-*.primevideo.com
-*.aiv-cdn.net
-*.aiv-delivery.net
-
-# Shopping flow -- fls-na is the session/checkout beacon. Several popular
-# lists block it, which breaks "Add to Cart" and 1-Click.
-fls-na.amazon.com
-completion.amazon.com
-unagi.amazon.com
-unagi-na.amazon.com
-
-# Alexa / Echo
-*.amazonalexa.com
-pitangui.amazon.com
-prod.amcs-tachyon.com
-alexa.na.gateway.devices.a2z.com
-avs-alexa-na.amazon.com
-
-# Fire TV / Fire tablets
-*.fireoscaptiveportal.com
-softwareupdates.amazon.com
-updates.amazon.com
-
-# Audible / Kindle
-*.audible.com
-*.audible.co.uk
-*.kindle.com
-
-
-# =====================================================================
-# 2. YOUTUBE
-#    Honest note: Pi-hole CANNOT block YouTube ads. Video ads are served
-#    from the same googlevideo.com hosts as the videos themselves. Lists
-#    that "block YouTube ads" mostly just break playback. So the goal
-#    here is simply: make YouTube work reliably everywhere.
-# =====================================================================
-
-*.youtube.com
-*.youtube-nocookie.com
-youtu.be
-*.ytimg.com
-*.ggpht.com
-*.googlevideo.com
-youtubei.googleapis.com
-youtube.googleapis.com
-yt3.ggpht.com
-yt4.ggpht.com
-s.youtube.com
-
-# Newer YouTube attestation endpoint. When this is blocked, the app on
-# smart TVs and phones throws "An error occurred" on every video.
-jnn-pa.googleapis.com
-
-# Playback stats. Technically telemetry, but several TV apps stall
-# without it.
-video-stats.l.google.com
-yt-video-upload.l.google.com
-ytimg.l.google.com
-
-
-# =====================================================================
-# 3. YAHOO MAIL
-#    No wildcard on yahoo.com -- ads.yahoo.com and analytics.yahoo.com
-#    deserve to stay blocked. These are the exact hosts Yahoo Mail needs.
-# =====================================================================
-
-yahoo.com
-www.yahoo.com
-mail.yahoo.com
-login.yahoo.com
-api.login.yahoo.com
-edit.yahoo.com
-guce.yahoo.com
-guce.oath.com
-consent.yahoo.com
-apis.mail.yahoo.com
-data.mail.yahoo.com
-geo.yahoo.com
-*.yimg.com
-*.yahoodns.net
-*.yahooapis.com
-edge.gycpi.b.yahoodns.net
-front.gycpi.b.yahoodns.net
-
-
-# =====================================================================
-# 4. TIKTOK
-#    ByteDance domains are blanket-blocked by most privacy lists, so
-#    TikTok is usually the first thing that dies behind a Pi-hole.
-#    These entries bring it back.
-# =====================================================================
-
-*.tiktok.com
-*.tiktokcdn.com
-*.tiktokcdn-us.com
-*.tiktokv.com
-*.tiktokv.us
-*.tiktokd.org
-*.ttwstatic.com
-*.ttlivecdn.com
-*.byteoversea.com
-*.ibytedtos.com
-*.ibyteimg.com
-*.muscdn.com
-*.musical.ly
-*.isnssdk.com
-*.sgpstatp.com
-*.byteintlapi.com
-
-
-# =====================================================================
-# 5. GOOGLE / ANDROID / CHROME
-#    Exact entries only. doubleclick, googlesyndication and
-#    googletagservices stay blocked.
-# =====================================================================
-
-google.com
-www.google.com
-accounts.google.com
-apis.google.com
-*.googleapis.com
-*.gstatic.com
-*.googleusercontent.com
-*.googlemail.com
-*.gvt1.com
-*.gvt2.com
-play.google.com
-android.clients.google.com
-clientservices.googleapis.com
-dl.google.com
-update.googleapis.com
-safebrowsing.googleapis.com
-safebrowsing.google.com
-chromewebstore.googleapis.com
-mail.google.com
-drive.google.com
-docs.google.com
-calendar.google.com
-meet.google.com
-photos.google.com
-maps.google.com
-news.google.com
-translate.google.com
-
-# Push notifications & app config. Blocking these silently kills
-# notifications and makes many Android apps hang on a loading spinner.
-fcm.googleapis.com
-mtalk.google.com
-alt1-mtalk.google.com
-alt2-mtalk.google.com
-alt3-mtalk.google.com
-alt4-mtalk.google.com
-alt5-mtalk.google.com
-alt6-mtalk.google.com
-alt7-mtalk.google.com
-alt8-mtalk.google.com
-firebaseinstallations.googleapis.com
-firebaseremoteconfig.googleapis.com
-firebase-settings.crashlytics.com
-android.googleapis.com
-
-
-# =====================================================================
-# 6. APPLE  (iPhone, iPad, Mac, Apple TV, HomePod)
-# =====================================================================
-
-*.apple.com
-*.icloud.com
-*.cdn-apple.com
-*.mzstatic.com
-*.apple-dns.net
-gsp-ssl.ls.apple.com
-gspe1-ssl.ls.apple.com
-gspe35-ssl.ls.apple.com
-mesu.apple.com
-swcdn.apple.com
-swscan.apple.com
-gdmf.apple.com
-appleid.apple.com
-idmsa.apple.com
-setup.icloud.com
-weather-data.apple.com
-
-
-# =====================================================================
-# 7. MICROSOFT  (Windows, Office 365, Outlook, Teams, Xbox)
-# =====================================================================
-
-*.microsoft.com
-*.microsoftonline.com
-*.msauth.net
-*.msftauth.net
-*.office.com
-*.office.net
-*.office365.com
-*.outlook.com
-*.live.com
-*.windowsupdate.com
-*.windows.net
-*.sharepoint.com
-*.onedrive.com
-*.skype.com
-*.xboxlive.com
-*.xbox.com
-login.live.com
-account.live.com
-graph.microsoft.com
-officecdn.microsoft.com
-officeclient.microsoft.com
-teams.microsoft.com
-teams.live.com
-dl.delivery.mp.microsoft.com
-tlu.dl.delivery.mp.microsoft.com
-1drv.ms
-
-
-# =====================================================================
-# 8. STREAMING & TV
-# =====================================================================
-
-# Netflix
-*.netflix.com
-*.netflix.net
-*.nflxvideo.net
-*.nflximg.net
-*.nflxext.net
-*.nflxso.net
-
-# Disney+ / ESPN / Hulu
-*.disneyplus.com
-*.disney-plus.net
-*.disneystreaming.com
-*.dssott.com
-*.bamgrid.com
-*.hulu.com
-*.hulustream.com
-*.huluim.com
-cdn.registerdisney.go.com
-
-# Max / HBO
-*.max.com
-*.hbomax.com
-*.hbomaxcdn.com
-*.hbo.com
-
-# Paramount+ / Peacock
-*.paramountplus.com
-*.cbsivideo.com
-*.peacocktv.com
-
-# Spotify -- spclient.wg.spotify.com carries both ads AND app config.
-# Blocking it breaks playback on several client versions, so it's allowed.
-*.spotify.com
-*.scdn.co
-*.spotifycdn.com
-spclient.wg.spotify.com
-apresolve.spotify.com
-
-# Twitch / Plex / Pandora / SiriusXM
-*.twitch.tv
-*.ttvnw.net
-*.jtvnw.net
-*.plex.tv
-*.plex.direct
-*.pandora.com
-*.siriusxm.com
-
-# Roku
-*.roku.com
-*.roku.tv
-*.rokutime.com
-
-# Samsung / LG smart TVs -- app stores and updates. Their telemetry
-# subdomains remain blocked by the Perflyst list.
-*.samsungcloudsolution.com
-*.samsungapps.com
-*.samsungotn.net
-*.lgappstv.com
-*.lgtvsdp.com
-ngfts.lge.com
-
-# Vizio / Chromecast app delivery
-*.vizio.com
-
-
-# =====================================================================
-# 9. GAME CONSOLES & PC GAMING
-# =====================================================================
-
-# Steam
-*.steampowered.com
-*.steamcommunity.com
-*.steamstatic.com
-*.steamcontent.com
-*.steamusercontent.com
-*.steamgames.com
-*.valve.net
-
-# PlayStation
-*.playstation.com
-*.playstation.net
-*.sonyentertainmentnetwork.com
-
-# Nintendo
-*.nintendo.com
-*.nintendo.net
-*.nintendowifi.net
-ctest.cdn.nintendo.net
-
-# Xbox -- see Microsoft section above, plus:
-title.mgt.xboxlive.com
-xsts.auth.xboxlive.com
-user.auth.xboxlive.com
-dlassets-ssl.xboxlive.com
-
-# Epic / EA / Ubisoft / Blizzard / Riot
-*.epicgames.com
-*.epicgames.dev
-*.unrealengine.com
-*.fortnite.com
-*.ea.com
-*.origin.com
-*.ubisoft.com
-*.ubi.com
-*.battle.net
-*.blizzard.com
-*.riotgames.com
-*.riotcdn.net
-
-# Discord
-*.discord.com
-*.discordapp.com
-*.discordapp.net
-*.discord.gg
-*.discord.media
-
-
-# =====================================================================
-# 10. WORK FROM HOME, AUTH & BANKING
-#     The "must never break" tier. Be conservative about ever removing
-#     anything from this section.
-# =====================================================================
-
-# --- 2FA / SSO / identity ---
-*.duosecurity.com
-*.okta.com
-*.oktacdn.com
-*.onelogin.com
-*.auth0.com
-*.authy.com
-*.pingidentity.com
-*.login.gov
-*.yubico.com
-
-# --- Payments ---
-# m.stripe.com and m.stripe.network are Stripe's fraud-signal endpoints.
-# They look exactly like trackers and get blocked constantly -- and when
-# they are, card payments fail on thousands of sites with no useful error.
-*.stripe.com
-*.stripe.network
-js.stripe.com
-m.stripe.com
-m.stripe.network
-*.paypal.com
-*.paypalobjects.com
-*.venmo.com
-*.plaid.com
-*.squareup.com
-*.square.com
-*.cash.app
-*.braintreegateway.com
-*.braintree-api.com
-*.adyen.com
-*.checkout.com
-*.klarna.com
-*.affirm.com
-*.afterpay.com
-
-# --- Shopify checkout ---
-# monorail-edge.shopifysvc.com is analytics, but Shopify's checkout JS
-# waits on it. Blocked = stalled checkout on a huge slice of the web.
-*.shopify.com
-*.shopifycdn.com
-*.shopifysvc.com
-monorail-edge.shopifysvc.com
-
-# --- Banks & finance (edit to match yours) ---
-*.chase.com
-*.bankofamerica.com
-*.wellsfargo.com
-*.citi.com
-*.capitalone.com
-*.usbank.com
-*.pnc.com
-*.ally.com
-*.discover.com
-*.americanexpress.com
-*.schwab.com
-*.fidelity.com
-*.vanguard.com
-*.intuit.com
-*.turbotax.com
-*.creditkarma.com
-*.experian.com
-*.equifax.com
-*.transunion.com
-
-# --- Meetings & collaboration ---
-*.zoom.us
-*.zoom.com
-*.zoomgov.com
-*.webex.com
-*.gotomeeting.com
-*.slack.com
-*.slack-edge.com
-*.slack-msgs.com
-*.slack-imgs.com
-slackb.com
-*.notion.so
-*.notion-static.com
-*.atlassian.com
-*.atlassian.net
-*.asana.com
-*.trello.com
-*.monday.com
-*.dropbox.com
-*.dropboxstatic.com
-*.dropboxusercontent.com
-*.box.com
-*.docusign.com
-*.docusign.net
-*.github.com
-*.githubusercontent.com
-*.githubassets.com
-*.gitlab.com
-*.salesforce.com
-*.force.com
-
-# --- Support chat widgets (sites break visibly without these) ---
-*.zendesk.com
-*.zdassets.com
-*.intercom.io
-*.intercomcdn.com
-
-
-# =====================================================================
-# 11. SHOPPING, FOOD & SHIPPING
-# =====================================================================
-
-*.walmart.com
-*.walmartimages.com
-*.target.com
-*.bestbuy.com
-*.costco.com
-*.ebay.com
-*.ebayimg.com
-*.ebaystatic.com
-*.etsy.com
-*.etsystatic.com
-*.homedepot.com
-*.thdstatic.com
-*.lowes.com
-*.wayfair.com
-*.doordash.com
-*.doordashcdn.com
-*.ubereats.com
-*.uber.com
-*.uber-assets.com
-*.grubhub.com
-*.instacart.com
-*.lyft.com
-*.ups.com
-*.fedex.com
-*.usps.com
-*.dhl.com
-*.narvar.com
-*.aftership.com
-
-
-# =====================================================================
-# 12. SOCIAL & MESSAGING
-#     graph.facebook.com is here because third-party "Log in with
-#     Facebook" buttons break without it, not because you love Meta.
-# =====================================================================
-
-facebook.com
-www.facebook.com
-m.facebook.com
-graph.facebook.com
-*.fbcdn.net
-*.messenger.com
-*.whatsapp.com
-*.whatsapp.net
-*.instagram.com
-*.cdninstagram.com
-*.x.com
-*.twitter.com
-*.twimg.com
-t.co
-*.reddit.com
-*.redd.it
-*.redditstatic.com
-*.redditmedia.com
-*.linkedin.com
-*.licdn.com
-*.pinterest.com
-*.pinimg.com
-*.snapchat.com
-*.sc-cdn.net
-*.telegram.org
-*.t.me
-*.signal.org
-
-
-# =====================================================================
-# 13. SMART HOME / IoT
-# =====================================================================
-
-*.ring.com
-*.nest.com
-*.wyze.com
-*.wyzecam.com
-*.smartthings.com
-*.tuya.com
-*.tuyaus.com
-*.meethue.com
-*.philips-hue.com
-*.sonos.com
-*.sonos.radio
-*.ecobee.com
-*.arlo.com
-*.eufylife.com
-*.shelly.cloud
-
-
-# =====================================================================
-# 14. CONDITIONAL -- ADD ONLY IF SOMETHING BREAKS
-#     These are commented out. They are real trackers. Uncomment one
-#     line at a time, only when you've confirmed via Pi-hole's Query Log
-#     that it's what's breaking.
-# =====================================================================
-
-# --- Amazon device rescue ---
-# Echo speakers responding slowly, or a Fire Stick stuttering on the
-# home screen, usually means these got caught by the Fire TV list:
-# device-metrics-us.amazon.com
-# device-metrics-us-2.amazon.com
-
-# --- Apple device telemetry ---
-# Uncomment if Apple TV or HomePod misbehaves:
-# xp.apple.com
-# metrics.icloud.com
-
-# --- Mobile app SDKs ---
-# Uncomment if a phone app hangs forever on a loading screen. Segment is
-# the usual culprit -- DoorDash, Instacart and many others won't finish
-# loading without it.
-# api.segment.io
-# cdn.segment.com
-# app.link
-# api.branch.io
-# cdn.branch.io
-# onesignal.com
-# api.onesignal.com
-
-# --- Email click-through tracking ---
-# Uncomment ONLY if links inside marketing/receipt emails give you
-# "server not found". This trades real privacy for convenience -- these
-# hosts exist to log that you opened the mail.
-# *.sendgrid.net
-# ct.sendgrid.net
-# *.list-manage.com
-# *.mandrillapp.com
-# *.exct.net
-# *.pstmrk.it
-# *.klaviyomail.com
-# *.hs-sites.com
-
-# --- Roku channel loading ---
-# Uncomment if Roku channels refuse to launch:
-# scribe.logs.roku.com
-# cooper.logs.roku.com
-
-# --- Google Tag Manager ---
-# A minority of sites are built so badly they render nothing without it.
-# Last resort only:
-# www.googletagmanager.com
-
-# =====================================================================
-#  END
-# =====================================================================
+! Title: Pi-hole Patch Panel - Allowlist
+! Description: Keeps Amazon, YouTube, Yahoo Mail, TikTok, streaming, consoles,
+!   banking and core internet plumbing working behind a Pi-hole.
+! Version: 2026-09-14
+! Format: Adblock Plus. ||example.com^ allows example.com and every subdomain.
+! Subscribe in Pi-hole v6 under Lists with TYPE = ALLOW.
+! Entries: 449
+!
+! NOTE: this replaces the earlier plain-text version. Gravity rejects "*.x.com"
+! as an invalid domain; ||x.com^ is the syntax Pi-hole actually understands.
+||ocsp.digicert.com^
+||ocsp.pki.goog^
+||ocsp.sectigo.com^
+||ocsp.usertrust.com^
+||ocsp.comodoca.com^
+||ocsp.godaddy.com^
+||ocsp.entrust.net^
+||ocsp.apple.com^
+||ocsp2.apple.com^
+||crl.microsoft.com^
+||crl3.digicert.com^
+||crl4.digicert.com^
+||crl.globalsign.com^
+||crl.identrust.com^
+||isrg.trustid.ocsp.identrust.com^
+||status.rapidssl.com^
+||crt.sectigo.com^
+||lencr.org^
+||amazontrust.com^
+||o.ss2.us^
+||s.ss2.us^
+||ocsp.rootca1.amazontrust.com^
+||crl.rootca1.amazontrust.com^
+||captive.apple.com^
+||connectivitycheck.gstatic.com^
+||connectivitycheck.android.com^
+||clients3.google.com^
+||www.msftconnecttest.com^
+||msftconnecttest.com^
+||www.msftncsi.com^
+||msftncsi.com^
+||ipv6.msftconnecttest.com^
+||detectportal.firefox.com^
+||network-test.debian.org^
+||nmcheck.gnome.org^
+||time.apple.com^
+||time.windows.com^
+||time.google.com^
+||time.nist.gov^
+||pool.ntp.org^
+||pool.ntp.org^
+||cloudfront.net^
+||akamaihd.net^
+||akamaized.net^
+||akamai.net^
+||fastly.net^
+||fastlylb.net^
+||llnwd.net^
+||edgekey.net^
+||edgesuite.net^
+||cdnjs.cloudflare.com^
+||cdn.jsdelivr.net^
+||unpkg.com^
+||ajax.googleapis.com^
+||hcaptcha.com^
+||hcaptcha.com^
+||recaptcha.net^
+||www.recaptcha.net^
+||challenges.cloudflare.com^
+||amazon.com^
+||amazon.co.uk^
+||amazon.ca^
+||media-amazon.com^
+||ssl-images-amazon.com^
+||images-amazon.com^
+||amazonaws.com^
+||amazonvideo.com^
+||primevideo.com^
+||aiv-cdn.net^
+||aiv-delivery.net^
+||fls-na.amazon.com^
+||completion.amazon.com^
+||unagi.amazon.com^
+||unagi-na.amazon.com^
+||amazonalexa.com^
+||pitangui.amazon.com^
+||prod.amcs-tachyon.com^
+||alexa.na.gateway.devices.a2z.com^
+||avs-alexa-na.amazon.com^
+||fireoscaptiveportal.com^
+||softwareupdates.amazon.com^
+||updates.amazon.com^
+||audible.com^
+||audible.co.uk^
+||kindle.com^
+||youtube.com^
+||youtube-nocookie.com^
+||youtu.be^
+||ytimg.com^
+||ggpht.com^
+||googlevideo.com^
+||youtubei.googleapis.com^
+||youtube.googleapis.com^
+||yt3.ggpht.com^
+||yt4.ggpht.com^
+||s.youtube.com^
+||jnn-pa.googleapis.com^
+||video-stats.l.google.com^
+||yt-video-upload.l.google.com^
+||ytimg.l.google.com^
+||yahoo.com^
+||www.yahoo.com^
+||mail.yahoo.com^
+||login.yahoo.com^
+||api.login.yahoo.com^
+||edit.yahoo.com^
+||guce.yahoo.com^
+||guce.oath.com^
+||consent.yahoo.com^
+||apis.mail.yahoo.com^
+||data.mail.yahoo.com^
+||geo.yahoo.com^
+||yimg.com^
+||yahoodns.net^
+||yahooapis.com^
+||edge.gycpi.b.yahoodns.net^
+||front.gycpi.b.yahoodns.net^
+||tiktok.com^
+||tiktokcdn.com^
+||tiktokcdn-us.com^
+||tiktokv.com^
+||tiktokv.us^
+||tiktokd.org^
+||ttwstatic.com^
+||ttlivecdn.com^
+||byteoversea.com^
+||ibytedtos.com^
+||ibyteimg.com^
+||muscdn.com^
+||musical.ly^
+||isnssdk.com^
+||sgpstatp.com^
+||byteintlapi.com^
+||google.com^
+||www.google.com^
+||accounts.google.com^
+||apis.google.com^
+||googleapis.com^
+||gstatic.com^
+||googleusercontent.com^
+||googlemail.com^
+||gvt1.com^
+||gvt2.com^
+||play.google.com^
+||android.clients.google.com^
+||clientservices.googleapis.com^
+||dl.google.com^
+||update.googleapis.com^
+||safebrowsing.googleapis.com^
+||safebrowsing.google.com^
+||chromewebstore.googleapis.com^
+||mail.google.com^
+||drive.google.com^
+||docs.google.com^
+||calendar.google.com^
+||meet.google.com^
+||photos.google.com^
+||maps.google.com^
+||news.google.com^
+||translate.google.com^
+||fcm.googleapis.com^
+||mtalk.google.com^
+||alt1-mtalk.google.com^
+||alt2-mtalk.google.com^
+||alt3-mtalk.google.com^
+||alt4-mtalk.google.com^
+||alt5-mtalk.google.com^
+||alt6-mtalk.google.com^
+||alt7-mtalk.google.com^
+||alt8-mtalk.google.com^
+||firebaseinstallations.googleapis.com^
+||firebaseremoteconfig.googleapis.com^
+||firebase-settings.crashlytics.com^
+||android.googleapis.com^
+||apple.com^
+||icloud.com^
+||cdn-apple.com^
+||mzstatic.com^
+||apple-dns.net^
+||gsp-ssl.ls.apple.com^
+||gspe1-ssl.ls.apple.com^
+||gspe35-ssl.ls.apple.com^
+||mesu.apple.com^
+||swcdn.apple.com^
+||swscan.apple.com^
+||gdmf.apple.com^
+||appleid.apple.com^
+||idmsa.apple.com^
+||setup.icloud.com^
+||weather-data.apple.com^
+||microsoft.com^
+||microsoftonline.com^
+||msauth.net^
+||msftauth.net^
+||office.com^
+||office.net^
+||office365.com^
+||outlook.com^
+||live.com^
+||windowsupdate.com^
+||windows.net^
+||sharepoint.com^
+||onedrive.com^
+||skype.com^
+||xboxlive.com^
+||xbox.com^
+||login.live.com^
+||account.live.com^
+||graph.microsoft.com^
+||officecdn.microsoft.com^
+||officeclient.microsoft.com^
+||teams.microsoft.com^
+||teams.live.com^
+||dl.delivery.mp.microsoft.com^
+||tlu.dl.delivery.mp.microsoft.com^
+||1drv.ms^
+||netflix.com^
+||netflix.net^
+||nflxvideo.net^
+||nflximg.net^
+||nflxext.net^
+||nflxso.net^
+||disneyplus.com^
+||disney-plus.net^
+||disneystreaming.com^
+||dssott.com^
+||bamgrid.com^
+||hulu.com^
+||hulustream.com^
+||huluim.com^
+||cdn.registerdisney.go.com^
+||max.com^
+||hbomax.com^
+||hbomaxcdn.com^
+||hbo.com^
+||paramountplus.com^
+||cbsivideo.com^
+||peacocktv.com^
+||spotify.com^
+||scdn.co^
+||spotifycdn.com^
+||spclient.wg.spotify.com^
+||apresolve.spotify.com^
+||twitch.tv^
+||ttvnw.net^
+||jtvnw.net^
+||plex.tv^
+||plex.direct^
+||pandora.com^
+||siriusxm.com^
+||roku.com^
+||roku.tv^
+||rokutime.com^
+||samsungcloudsolution.com^
+||samsungapps.com^
+||samsungotn.net^
+||lgappstv.com^
+||lgtvsdp.com^
+||ngfts.lge.com^
+||vizio.com^
+||steampowered.com^
+||steamcommunity.com^
+||steamstatic.com^
+||steamcontent.com^
+||steamusercontent.com^
+||steamgames.com^
+||valve.net^
+||playstation.com^
+||playstation.net^
+||sonyentertainmentnetwork.com^
+||nintendo.com^
+||nintendo.net^
+||nintendowifi.net^
+||ctest.cdn.nintendo.net^
+||title.mgt.xboxlive.com^
+||xsts.auth.xboxlive.com^
+||user.auth.xboxlive.com^
+||dlassets-ssl.xboxlive.com^
+||epicgames.com^
+||epicgames.dev^
+||unrealengine.com^
+||fortnite.com^
+||ea.com^
+||origin.com^
+||ubisoft.com^
+||ubi.com^
+||battle.net^
+||blizzard.com^
+||riotgames.com^
+||riotcdn.net^
+||discord.com^
+||discordapp.com^
+||discordapp.net^
+||discord.gg^
+||discord.media^
+||duosecurity.com^
+||okta.com^
+||oktacdn.com^
+||onelogin.com^
+||auth0.com^
+||authy.com^
+||pingidentity.com^
+||login.gov^
+||yubico.com^
+||stripe.com^
+||stripe.network^
+||js.stripe.com^
+||m.stripe.com^
+||m.stripe.network^
+||paypal.com^
+||paypalobjects.com^
+||venmo.com^
+||plaid.com^
+||squareup.com^
+||square.com^
+||cash.app^
+||braintreegateway.com^
+||braintree-api.com^
+||adyen.com^
+||checkout.com^
+||klarna.com^
+||affirm.com^
+||afterpay.com^
+||shopify.com^
+||shopifycdn.com^
+||shopifysvc.com^
+||monorail-edge.shopifysvc.com^
+||chase.com^
+||bankofamerica.com^
+||wellsfargo.com^
+||citi.com^
+||capitalone.com^
+||usbank.com^
+||pnc.com^
+||ally.com^
+||discover.com^
+||americanexpress.com^
+||schwab.com^
+||fidelity.com^
+||vanguard.com^
+||intuit.com^
+||turbotax.com^
+||creditkarma.com^
+||experian.com^
+||equifax.com^
+||transunion.com^
+||zoom.us^
+||zoom.com^
+||zoomgov.com^
+||webex.com^
+||gotomeeting.com^
+||slack.com^
+||slack-edge.com^
+||slack-msgs.com^
+||slack-imgs.com^
+||slackb.com^
+||notion.so^
+||notion-static.com^
+||atlassian.com^
+||atlassian.net^
+||asana.com^
+||trello.com^
+||monday.com^
+||dropbox.com^
+||dropboxstatic.com^
+||dropboxusercontent.com^
+||box.com^
+||docusign.com^
+||docusign.net^
+||github.com^
+||githubusercontent.com^
+||githubassets.com^
+||gitlab.com^
+||salesforce.com^
+||force.com^
+||zendesk.com^
+||zdassets.com^
+||intercom.io^
+||intercomcdn.com^
+||walmart.com^
+||walmartimages.com^
+||target.com^
+||bestbuy.com^
+||costco.com^
+||ebay.com^
+||ebayimg.com^
+||ebaystatic.com^
+||etsy.com^
+||etsystatic.com^
+||homedepot.com^
+||thdstatic.com^
+||lowes.com^
+||wayfair.com^
+||doordash.com^
+||doordashcdn.com^
+||ubereats.com^
+||uber.com^
+||uber-assets.com^
+||grubhub.com^
+||instacart.com^
+||lyft.com^
+||ups.com^
+||fedex.com^
+||usps.com^
+||dhl.com^
+||narvar.com^
+||aftership.com^
+||facebook.com^
+||www.facebook.com^
+||m.facebook.com^
+||graph.facebook.com^
+||fbcdn.net^
+||messenger.com^
+||whatsapp.com^
+||whatsapp.net^
+||instagram.com^
+||cdninstagram.com^
+||x.com^
+||twitter.com^
+||twimg.com^
+||t.co^
+||reddit.com^
+||redd.it^
+||redditstatic.com^
+||redditmedia.com^
+||linkedin.com^
+||licdn.com^
+||pinterest.com^
+||pinimg.com^
+||snapchat.com^
+||sc-cdn.net^
+||telegram.org^
+||t.me^
+||signal.org^
+||ring.com^
+||nest.com^
+||wyze.com^
+||wyzecam.com^
+||smartthings.com^
+||tuya.com^
+||tuyaus.com^
+||meethue.com^
+||philips-hue.com^
+||sonos.com^
+||sonos.radio^
+||ecobee.com^
+||arlo.com^
+||eufylife.com^
+||shelly.cloud^
