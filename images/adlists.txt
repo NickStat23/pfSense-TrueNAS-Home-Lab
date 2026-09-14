@@ -1,118 +1,13 @@
-# =====================================================================
-#  PI-HOLE BLOCKLIST (ADLIST) SET  --  "BALANCED + SMART TV/IoT"
-#  Built 2026-09-14
-#
-#  Expected result: ~600,000-700,000 unique domains after Pi-hole
-#  de-duplicates them. Typical block rate 15-30% of all DNS queries.
-#
-#  HOW TO USE
-#   Web UI : Lists -> paste the URLs below (one per line) -> Add
-#   CLI    : run pihole-setup.sh (does this for you)
-#  Then run: pihole -g
-#
-#  Comment lines (#) are ignored. Paste only the URLs.
-# =====================================================================
-
-
-# ---------------------------------------------------------------------
-# TIER 1 - THE BACKBONE  (add these, in this order)
-# ---------------------------------------------------------------------
-
-# HaGeZi Multi PRO -- ~225k domains.
-# Ads, tracking, metrics, telemetry, phishing, malware, scam, fake shops,
-# coin miners. This is the single best general-purpose list available and
-# it is actively curated with a real false-positive reporting process.
-# If you only ever add one list, add this one.
 https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.txt
-
-# HaGeZi Threat Intelligence Feeds - MEDIUM -- ~318k domains.
-# Malware C2, ransomware, active phishing, cryptojacking. The "medium"
-# variant is deliberately chosen: the full TIF list is 2.1M domains and
-# eats a lot of RAM on a Pi for a small real-world gain.
 https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/tif.medium.txt
-
-# HaGeZi Pop-Up Ads -- interstitials, redirect chains, "you've won" pages.
-# Catches the aggressive stuff Multi PRO leaves alone.
 https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/popupads.txt
-
-# Peter Lowe's Ad & Tracking Server List -- ~3k domains.
-# Tiny, hand-maintained since 1996, essentially zero false positives.
-# Free insurance.
 https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext
-
-
-# ---------------------------------------------------------------------
-# TIER 2 - BREADTH  (recommended; safe)
-# ---------------------------------------------------------------------
-
-# StevenBlack unified hosts -- the classic baseline. Heavy overlap with
-# HaGeZi (that costs you nothing, Pi-hole de-dupes), but it catches a
-# different long tail.
 https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-
-# Phishing Army (extended) -- phishing domains, updated hourly.
 https://phishing.army/download/phishing_army_blocklist_extended.txt
-
-# URLhaus / abuse.ch -- domains actively distributing malware right now.
 https://urlhaus.abuse.ch/downloads/hostfile/
-
-# Spam404 -- scam and fraudulent business domains.
 https://raw.githubusercontent.com/Spam404/lists/master/main-blacklist.txt
-
-# Jarelllama Scam Blocklist -- fake shops and scam sites, auto-retired
-# when domains go dead so it doesn't bloat.
 https://raw.githubusercontent.com/jarelllama/Scam-Blocklist/main/lists/wildcard_domains/scams.txt
-
-
-# ---------------------------------------------------------------------
-# TIER 3 - SMART TV, STREAMING STICK & IoT TELEMETRY
-# (you asked for these)
-# ---------------------------------------------------------------------
-
-# Perflyst SmartTV -- Samsung, LG, Vizio, Philips, Sony, Hisense
-# phone-home and ad domains. Does not block the apps themselves.
 https://raw.githubusercontent.com/Perflyst/PiHoleBlocklist/master/SmartTV.txt
-
-# Perflyst AmazonFireTV -- Fire TV / Fire Stick ads and metrics.
-# NOTE: see the allowlist "Amazon device rescue" section if your Echo or
-# Fire Stick gets sluggish after adding this.
 https://raw.githubusercontent.com/Perflyst/PiHoleBlocklist/master/AmazonFireTV.txt
-
-# Perflyst android-tracking -- Android / Google TV telemetry SDKs.
 https://raw.githubusercontent.com/Perflyst/PiHoleBlocklist/master/android-tracking.txt
-
-# Stalkerware indicators -- domains used by consumer spyware apps.
-# Small, high value, no false positives.
 https://raw.githubusercontent.com/AssoEchap/stalkerware-indicators/master/generated/hosts
-
-
-# =====================================================================
-#  DELIBERATELY NOT INCLUDED
-# =====================================================================
-#
-# You said no to these. Uncomment and re-run `pihole -g` if you change
-# your mind.
-#
-# Adult content (NSFW):
-# https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/nsfw.txt
-#
-# Gambling / betting:
-# https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/gambling.txt
-#
-# DoH / VPN / proxy bypass blocking -- stops devices and browsers from
-# routing around Pi-hole with encrypted DNS. Very effective, but it WILL
-# break a VPN you actually use, and some browsers fall back badly:
-# https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/doh-vpn-proxy-bypass.txt
-#
-# Windows telemetry (WindowsSpyBlocker). Aggressive -- has been known to
-# break Windows Update, Store and Office activation:
-# https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
-#
-# HaGeZi Multi PRO++ / ULTIMATE -- only if you want to go hunting.
-# Swap these IN PLACE OF pro.txt above, never alongside it:
-# https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.plus.txt
-# https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/ultimate.txt
-#
-# HaGeZi native.tiktok.txt -- DO NOT ADD. It blocks TikTok itself, which
-# is the opposite of what you asked for.
-# =====================================================================
