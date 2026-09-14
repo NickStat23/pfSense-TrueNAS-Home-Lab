@@ -1,0 +1,127 @@
+# =====================================================================
+#  PI-HOLE TARGETED DENYLIST
+#  Built 2026-09-14
+#
+#  WHY THIS FILE EXISTS
+#  The allowlist wildcards whole domains (*.amazon.com, *.tiktok.com,
+#  *.apple.com) so those services reliably work. The side effect is that
+#  each company's OWN first-party trackers -- which live on subdomains of
+#  the same domain -- get let back in through the front door.
+#
+#  This file closes those specific holes back up, one hostname at a time,
+#  without touching anything the service needs to function. It is the
+#  difference between a whitelist and a well-built whitelist.
+#
+#  Applied as exact deny entries (type 1). In Pi-hole an allowlist match
+#  wins over a denylist match, so if one of these ever causes trouble you
+#  just add that single hostname to the allowlist and it wins.
+# =====================================================================
+
+
+# ---------------------------------------------------------------------
+# TIKTOK -- the advertising pixel, not the app
+# analytics.tiktok.com is the tracker TikTok embeds on OTHER people's
+# websites. Blocking it does not affect the TikTok app at all.
+# ---------------------------------------------------------------------
+analytics.tiktok.com
+ads.tiktok.com
+ads-api.tiktok.com
+analytics-sg.tiktok.com
+
+
+# ---------------------------------------------------------------------
+# AMAZON -- device telemetry
+# These are what make an Echo or Fire Stick chatty. Blocking them is
+# normally fine. If your Echo starts responding slowly or a Fire Stick
+# stutters, allowlist these two and the problem goes away.
+# ---------------------------------------------------------------------
+device-metrics-us.amazon.com
+device-metrics-us-2.amazon.com
+
+
+# ---------------------------------------------------------------------
+# APPLE -- analytics and App Store ads
+# None of these are required for iCloud, updates, Find My, activation or
+# push. xp.apple.com is the one exception worth knowing: a small number
+# of Apple TV / HomePod setups get fussy without it.
+# ---------------------------------------------------------------------
+iadsdk.apple.com
+metrics.apple.com
+securemetrics.apple.com
+supportmetrics.apple.com
+metrics.icloud.com
+books-analytics-events.apple.com
+notes-analytics-events.apple.com
+weather-analytics-events.apple.com
+stocks-analytics-events.apple.com
+xp.apple.com
+
+
+# ---------------------------------------------------------------------
+# MICROSOFT -- Windows telemetry
+# Deliberately conservative. settings-win.data.microsoft.com and the
+# windowsupdate hosts are NOT here, because blocking those is how people
+# break Windows Update and the Store.
+# ---------------------------------------------------------------------
+vortex.data.microsoft.com
+vortex-win.data.microsoft.com
+telecommand.telemetry.microsoft.com
+watson.telemetry.microsoft.com
+telemetry.microsoft.com
+browser.events.data.microsoft.com
+functional.events.data.microsoft.com
+self.events.data.microsoft.com
+
+
+# ---------------------------------------------------------------------
+# ROKU -- logging endpoints
+# Blocking these is usually clean. If a Roku channel refuses to launch,
+# allowlist scribe.logs.roku.com first.
+# ---------------------------------------------------------------------
+scribe.logs.roku.com
+cooper.logs.roku.com
+giga.logs.roku.com
+
+
+# ---------------------------------------------------------------------
+# SPOTIFY -- ad and analytics endpoints
+# spclient.wg.spotify.com is intentionally NOT here -- it carries app
+# config as well as ads, and blocking it breaks playback.
+# ---------------------------------------------------------------------
+adeventtracker.spotify.com
+pixel.spotify.com
+analytics.spotify.com
+ads-fa.spotify.com
+
+
+# ---------------------------------------------------------------------
+# LINKEDIN / X -- their pixels on third-party sites
+# ---------------------------------------------------------------------
+px.ads.linkedin.com
+ads.linkedin.com
+analytics.linkedin.com
+analytics.twitter.com
+ads-api.twitter.com
+
+
+# ---------------------------------------------------------------------
+# GOOGLE -- ad and measurement hosts under domains we wildcarded
+# ---------------------------------------------------------------------
+adservice.google.com
+pagead2.googlesyndication.com
+googleads.g.doubleclick.net
+csi.gstatic.com
+
+
+# ---------------------------------------------------------------------
+# YAHOO -- belt and braces. The allowlist uses exact entries for Yahoo
+# so these should already be blocked, but pinning them makes it explicit.
+# ---------------------------------------------------------------------
+ads.yahoo.com
+analytics.yahoo.com
+adtech.yahooinc.com
+sp.analytics.yahoo.com
+
+# =====================================================================
+#  END
+# =====================================================================
